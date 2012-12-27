@@ -22,8 +22,8 @@ DATABASES = {
 
 CONCURRENT_THREADING = False
 
-DOWNLOADS_DIR = "/home/can/torrentor/downloads/"
-CONVERT_DIR = "/home/can/torrentor/convert/"
+DOWNLOADS_DIR = <DOWNLOADS_DIR>
+CONVERT_DIR = <CONVERT_DIR>
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
