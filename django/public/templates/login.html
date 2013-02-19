@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>torrentor, a remote torrent client</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Le styles -->
+    <link href="/files/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="/files/ico/favicon.ico">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    </script>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="brand" href="/">
+          <img src="/files/img/torrentor_logo.png" style="position:absolute;height:30px;left:1px;top:1px;"/>
+          &nbsp;Torrentor
+        </a>
+        <div class="pull-right">
+          <ul class="nav pull-right">
+            <li class="dropdown"><a class="dropdown-toggle">Welcome, Guest </a>
+            </li>
+          </ul>
+        </div>
+        <div class="nav-collapse">
+        <ul class="nav">
+          <li class="active"><a href="/">Downloads</a></li>
+          <li><a href="/browse/home">Library</a></li>
+          <li><a href="/newslog">NewsLog</a></li>
+        </ul>
+      </div>
+      </div>
+      </div>
+    </div>
+<div class="container">
+<form class="form-horizontal" action='/login/' method="POST">
+  <fieldset>
+    <div id="legend">
+      <legend class="">Login to Torrentor</legend>
+    </div>
+    <div class="control-group">
+      <p id="message" class="text-warning">{{message}}</p>
+      <!-- Username -->
+      <label class="control-label"  for="username">Username</label>
+      <div class="controls">
+        <input type="text" id="username" name="username" placeholder="" class="input-xlarge">
+      </div>
+      <input type="text" id="next" name="next" placeholder="" value="{{n}}" style="display:none;">
+    </div>
+ 
+    <div class="control-group">
+      <!-- Password-->
+      <label class="control-label" for="password">Password</label>
+      <div class="controls">
+        <input type="password" id="password" name="password" placeholder="" class="input-xlarge">
+      </div>
+    </div>
+ 
+ 
+    <div class="control-group">
+      <!-- Button -->
+      <div class="controls">
+        <button class="btn btn-inverse">Login</button>
+      </div>
+    </div>
+  </fieldset>
+</form>  
+</div>    
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/files/js/bootstrap.js"></script>
+  </body>
+</html>

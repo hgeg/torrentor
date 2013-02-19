@@ -20,6 +20,8 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="/files/js/bootstrap.js"></script>
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="/files/ico/favicon.ico">
@@ -35,8 +37,26 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
       <div class="container-fluid">
-        <a class="brand" href="/">Torrentor</a>
-        <a type="button" class="btn pull-right"><i class="icon-user"></i> Guest</a>
+        <a class="brand" href="/">
+          <img src="/files/img/torrentor_logo.png" style="position:absolute;height:30px;left:1px;top:1px;"/>
+          &nbsp;Torrentor
+        </a>
+        {%if user%} 
+        <div class="pull-right">
+          <ul class="nav pull-right">
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{user.username}}<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/accounts/preferences"><i class="icon-cog"></i> Preferences</a></li>
+                <li><a href="/help/support"><i class="icon-envelope"></i> Contact Support</a></li>
+                <li class="divider"></li>
+                <li><a href="/accounts/logout"><i class="icon-off"></i> Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        {%else%}
+        <a type="button" class="btn pull-right" href="/login"><i class="icon-user"></i> Guest</a>
+        {%endif%}
         <div class="nav-collapse">
         <ul class="nav">
           <li><a href="/">Downloads</a></li>
@@ -58,6 +78,7 @@
         </ul>
         <h5>Updates:</h5>
         <ul>
+          <li>On-site torrent search</li>
           <li>Sorting files and pagination in Library</li>
           <li>Pausing/Resuming torrents</li>
           <li>NewsLog section</li>

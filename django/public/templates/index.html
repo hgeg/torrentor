@@ -29,9 +29,13 @@
     <link rel="apple-touch-icon-precomposed" href="/files/ico/apple-touch-icon-57-precomposed.png">
 
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="/files/js/bootstrap.js"></script>
 
     <script>
+        keys = false;
+        input = ""
+        oldinput = ""
         query = "5";
         type="limit";
         function perform(action,pid){
@@ -42,7 +46,43 @@
               success: function(data){$("#dynamic").html(data);
         }});
         }
-        $(document).ready(function(){check();setInterval("check();",1000);});
+        $(document).ready(function(){
+          $('#id_search').keypress(function(event) {
+            if (event.which == 13) {
+              keys = false;
+              search(input);
+              event.preventDefault();
+            }
+          });
+          check();setInterval("check();search(input);keys=false;",1000);
+        });
+
+        function search(input){
+          if(input.length==0) {
+            $('#results').html('Type a keyword to find torrents...');
+            $('#sloader').fadeOut(200) 
+          }
+          if((input.length<4 || oldinput==input) || keys) return false;
+          $('#sloader').fadeIn(200) 
+          $.ajax({url:'/torrents/'+input+'/',
+           success: function(data) {
+              $('#results').html('')
+              if(data == "error: no match found")
+                $('#results').append('No match found.');
+              else
+                $.each(data, function(i,value) {
+                  $('#results').append('<div id="result_'+i+'" class="media" style="display:none;font-size:9px;"><div class="media-body row-fluid"><div class="span9"><h6 class="media-heading">'+value.name+'</h6>Category : <span class="text-info">'+value.category+'</span>, Health: <span class="text-success">'+value.seeder+'</span>/<span class="text-warning">'+value.leecher+'</span>, Verified<i class="icon-ok"></i> </div><div class="span3"><input type="submit" onclick="$(\'#id_torlink\').attr(\'value\',\''+value.torrent+'\');" class="btn btn-inverse pull-right" style="margin-top:6px;margin-right:15px;" value="Download"></input></div></div></div>');
+                  $('#result_'+i).fadeIn(400)
+                });
+              $('#sloader').fadeOut(200) 
+            },
+            error: function() {
+              $('#results').html('No match found.');
+              $('#sloader').fadeOut(200) 
+            }
+          });      
+          oldinput = input;
+        }
     </script>
   </head>
 
@@ -50,8 +90,26 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
       <div class="container-fluid">
-        <a class="brand" href="/">Torrentor</a>
-        <a type="button" class="btn pull-right"><i class="icon-user"></i> Guest</a>
+        <a class="brand" href="/">
+          <img src="/files/img/torrentor_logo.png" style="position:absolute;height:30px;left:1px;top:1px;"/>
+          &nbsp;Torrentor
+        </a>
+        {%if user%} 
+        <div class="pull-right">
+          <ul class="nav pull-right">
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{user.username}} <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/accounts/preferences"><i class="icon-cog"></i> Preferences</a></li>
+                <li><a href="/help/support"><i class="icon-envelope"></i> Contact Support</a></li>
+                <li class="divider"></li>
+                <li><a href="/accounts/logout"><i class="icon-off"></i> Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        {%else%}
+        <a type="button" class="btn pull-right" href="/login"><i class="icon-user"></i> Guest</a>
+        {%endif%}
         <div class="nav-collapse">
         <ul class="nav">
           <li class="active"><a href="/">Downloads</a></li>
@@ -63,21 +121,43 @@
       </div>
     </div>
     <div class="container">
+    {%if message %}
+    <div class="alert">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Error!</strong> {{message}}
+    </div>
+    {%endif%}
 
+    {% if user.username != "guest" %}
       <div class="well">
-          <h4>Start a download:</h4>
           <form action="/upload/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <p>{{ form.non_field_errors }}</p>
-                {{ form.as_p }}
-            <!--<p>{{ form.torfile.label_tag }}</p>
-            <p>
-                {{ form.torfile.errors }}
-                {{ form.torfile }}
-            </p>-->
-            <p><input type="submit" value="Start Download" class="btn btn-primary"/></p>
+            <div class="container-fluid">
+            <div class="row-fluid">
+            <div class="span4">
+              <h3>Start a download:</h3>
+              <p>{{ form.non_field_errors }}</p>
+              <label for="id_search"><span class="badge badge-warning">new!</span> torrentSearch:</label>
+              <input id="id_search" type="text" onkeyup="input=this.value;keys=true;" autocomplete="off" placeholder="search for torrents...">
+              <img id="sloader" src="/files/img/loading.gif" style="display:none;"/>
+                  {{ form.as_p }}
+              <!--<p>{{ form.torfile.label_tag }}</p>
+              <p>
+                  {{ form.torfile.errors }}
+                  {{ form.torfile }}
+              </p>-->
+              <p><input type="submit" value="Download" class="btn btn-inverse"/></p>
+            </div>
+            <div class="span8">
+              <h4>Results:</h4>
+              <ul id="results" class="media-list">
+              </ul>
+            </div>
+            </div>
+            </div>
           </form>
       </div>
+    {%endif%}
       <div class="well">
         <!--<input id="searchForm" type="text" placeholder="Search in all downloads..." style="width:90%;"/>-->
         <h3 id="pTitle">Current Downloads:</h3>

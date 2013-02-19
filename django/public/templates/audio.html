@@ -34,7 +34,10 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
       <div class="container-fluid">
-        <a class="brand" href="/">Torrentor</a>
+        <a class="brand" href="/">
+          <img src="/files/img/torrentor_logo.png" style="position:absolute;height:30px;left:1px;top:1px;"/>
+          &nbsp;Torrentor
+        </a>
         <a type="button" class="btn pull-right"><i class="icon-user"></i> Guest</a>
         <div class="nav-collapse">
         <ul class="nav">
@@ -58,10 +61,10 @@
         <h5>{{title}}</h5>
         <div clas="row">
           <audio autoplay="autoplay" controls="controls">  
-            <source src="/archive/{{media}}" />  
+            <source src="http://torrentor.zapto.org:942/{{media}}" />  
           </audio>  
         </div>
-        <a href="/archive/{{media}}"><button type="button" class="btn btn-inverse" >Download</button></a>
+        <a href="http://torrentor.zapto.org:942/{{media}}"><button type="button" class="btn btn-inverse" >Download</button></a>
 
       </div>
       <!-- Example row of columns -->

@@ -9,9 +9,12 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.template import RequestContext
 from django.core.paginator import Paginator
 from django.utils.encoding import smart_text
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib import auth
 from StringIO import StringIO
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
-import time,bencode,urllib2,gzip,re,logging,zipfile,subprocess,string
+import time,bencode,urllib2,gzip,re,logging,zipfile,subprocess,string,httplib,json
 
 from settings import DOWNLOADS_DIR, CONVERT_DIR
 
@@ -24,6 +27,8 @@ tvshowRegex2 = re.compile('(?P<show>.*).(?P<season>[0-9]{1,2})x(?P<episode>[0-9]
 movieRegex = re.compile('(?P<movie>.*)[\.|\[|\(| ]{1}(?P<year>(?:(?:19|20)[0-9]{2}))(?P<teams>.*)', re.IGNORECASE)
 
 def prs(st): return filter(lambda x: x in string.printable, st)
+
+def removeNonAscii(s): return "".join(i for i in s if ord(i)<128)
 
 def getFileName(filepath):
     if os.path.isfile(filepath):
@@ -118,15 +123,47 @@ def createFile(videofilename,suburl):
         os.remove(zipfilename)
         return None
 
-def newslog(request):
-    return render_to_response('newslog.html')
+@csrf_exempt
+def login(request):
+  if request.user.is_authenticated(): return HttpResponseRedirect('/')
+  if request.method=="GET":
+    try: n = request.GET['next']
+    except: n = ''
+    return render_to_response('login.html',{'n':n})
+  usr = request.POST["username"]
+  pas = request.POST["password"]
+  nxt = request.POST["next"]
+  try: u = User.objects.get(username=usr)
+  except: return render_to_response("login.html",{'message':'Invalid username or password'})
+  user = auth.authenticate(username=u.username, password=pas)
+  if user is not None:
+    if user.is_active:
+      auth.login(request, user)
+      return HttpResponseRedirect("%s"%nxt)
+    else:
+      return render_to_response("login.html",{'message':'This user is not activated'})
+  else:
+      return render_to_response("login.html",{'message':'Invalid username or password'})
 
+@login_required
+def logout(request):
+  auth.logout(request)
+  return HttpResponseRedirect('/')
+
+@login_required
+def newslog(request):
+  return render_to_response('newslog.html',{'user':request.user})
+
+@login_required
 def pre_upload(request):
     form = forms.torrentForm()
     return render_to_response('index.html', {'form': form}, context_instance=RequestContext(request))
 
+@login_required
 def upload(request):
     form = forms.torrentForm(request.POST,request.FILES)
+    if request.user.username=="guest":
+      return render_to_response('index.html', {'form': form, "message": "Guest's are not allowed to start download processes."}, context_instance=RequestContext(request))
     if form.is_valid():
             try:
               f = request.FILES['torfile']
@@ -150,12 +187,13 @@ def upload(request):
             else:
               u = int(time.time())
               l = request.POST['torlink']
-              data = urllib2.urlopen(l)
               try:
+                data = urllib2.urlopen(l)
                 buf = StringIO(data.read())
                 f = gzip.GzipFile(fileobj=buf)
                 data = f.read()
               except:
+                data = urllib2.urlopen(l)
                 data = data.read()
               with open("/home/can/torrentor/torrents/%d.torrent"%u,"wb") as f:
                   f.write(data)
@@ -177,34 +215,43 @@ def upload(request):
     else: pass
     return HttpResponseRedirect("/") 
 
+@login_required
 def perform(request,action,pid):
-    Process.objects.get(category=pid).perform(action)
+    Process.objects.filter(category=pid)[0].perform(action)
     return HttpResponse('OK')
 
 def check(request,type,query): 
     data=''
     if(type=="limit"):
-      lookup = Process.objects.filter(progress__gt=0).order_by("id").reverse()
+      lookup = Process.objects.filter(progress__gt=0)
     if len(lookup)>0:
       for e in lookup:
-          stats = (
-             '''<td><p class="text-success">Seeding <button class="btn btn-small" href="#"><i class="icon-pause"></i></button><button class="btn btn-small" href="#"><i class="icon-remove"></i></button></p></td>''',
-             '''<td><p class="text-info">Downloading <button class="btn btn-primary" onclick="perform('pause','%s');"><i class="icon-pause"></i></button><button class="btn btn-primary" onclick="perform('cancel','%s');" href="#"><i class="icon-remove"></i></button></p></td>'''%(e.category,e.category),
-             '''<td><p class="text-mute">Queued <button class="btn btn-primary" onclick="perform('pause','%s');" href=""><i class="icon-pause"></i></button><button class="btn btn-primary" onclick="perform('cancel','%s');" href="#"><i class="icon-remove"></i></button></p></td>'''%(e.category,e.category),"","","","",
-             '''<td><p class="text-warning">Paused <button class="btn btn-primary" onclick="perform('resume','%s');"><i class="icon-play"></i></button><button class="btn btn-primary" onclick="perform('cancel','%s');" href="#"><i class="icon-remove"></i></button></p></td>'''%(e.category,e.category),
-          )
-          check = e.check()
+          if request.user.username != "guest":
+            stats = (
+             '''<td><p class="text-success">Seeding <button class="btn btn-inverse btn-mini" href="#"><i class="icon-white icon-pause"></i></button> <button class="btn btn-inverse btn-mini" href="#"><i class="icon-white icon-remove"></i></button></p></td>''',
+             '''<td><p class="text-info">Downloading <button class="btn btn-inverse btn-mini" onclick="perform('pause','%s');"><i class="icon-white icon-pause"></i></button> <button class="btn btn-inverse btn-mini" onclick="perform('cancel','%s');" href="#"><i class="icon-white icon-remove"></i></button></p></td>'''%(e.category,e.category),
+             '''<td><p class="text-mute">Queued <button class="btn btn-inverse btn-mini" onclick="perform('pause','%s');" href=""><i class="icon-white icon-pause"></i></button> <button class="btn btn-inverse btn-mini" onclick="perform('cancel','%s');" href="#"><i class="icon-white icon-remove"></i></button></p></td>'''%(e.category,e.category),"","","","",
+             '''<td><p class="text-warning">Paused <button class="btn btn-inverse btn-mini" onclick="perform('resume','%s');"><i class="icon-white icon-play"></i></button> <button class="btn btn-inverse btn-mini" onclick="perform('cancel','%s');" href="#"><i class="icon-white icon-remove"></i></button></p></td>'''%(e.category,e.category),
+            )
+          else:
+            stats = (
+             '''<td><p class="text-success">Seeding</p></td>''',
+             '''<td><p class="text-info">Downloading</p></td>''',
+             '''<td><p class="text-mute">Queued</p></td>''',"","","","",
+             '''<td><p class="text-warning">Paused</p></td>''',
+            )
           try:
               status = stats[e.progress]
           except:
               status = '<td><p class="text-error">Error %d<i class="icon-exclamation-sign"></i></p></td>'%e.progress
+          check = e.check()
           name = e.name if len(e.name)<50 else "%s..."%e.name[:47]
           data += '''<tr>
                        <td><p>%s</p></td>
                        %s
                        <td>
                            <div class="progress" style="margin-bottom:-20px;">
-                              <div class="bar bar-danger" style="width:%d%%;">
+                              <div class="bar bar-inverse" style="width:%d%%;">
                               </div>
                            </div>
                            <small>&nbsp;&nbsp;%s</small> 
@@ -215,8 +262,9 @@ def check(request,type,query):
                        <td><p>%s</p></td>
                    </tr>'''%(name,status,check[1],check[0],check[2],check[3],check[4])
     else:
-            data = '<tr><td><p class="text-info">No processes...</p></td><td></td><td></td></tr>'
+            data = '<tr><td><p class="text-info">No processes...</p></td><td></td><td></td><td></td></tr>'
     return HttpResponse(data)
+
 
 def subtitles(request,path):
   try:
@@ -249,6 +297,7 @@ def subtitles(request,path):
     return HttpResponse(str(subsFile))
   else: return subsFile
   
+@login_required
 def convert(request,key): 
   arg = "%s%s"%(DOWNLOADS_DIR,key)
   base, infile = arg.rsplit('/',1)
@@ -258,6 +307,7 @@ def convert(request,key):
   subprocess.Popen(['screen','python','/home/can/torrentor/downloader/convert.py',arg])
   return HttpResponseRedirect("/browse/%s"%key.rsplit('/',1)[0])
 
+@login_required
 @csrf_exempt
 def search(request,path="home"):
     query= request.POST['query']
@@ -276,7 +326,7 @@ def search(request,path="home"):
     canonical = to_canonical(path)
     if os.path.isdir(canonical):
       for item in os.listdir(canonical):
-        if query.lower() in item.lower():
+        if query.lower() in removeNonAscii(item).lower():
           name = re.sub(p,r'<span style="background-color:yellow;">\1</span>',item)
           if path=="":
             inside[name] = "%s"%item
@@ -284,8 +334,16 @@ def search(request,path="home"):
             inside[name] = "%s/%s"%(path,item)
       inside = OrderedDict(sorted(inside.iteritems()))
     return render_to_response('files.html', {'from': back, 'to':inside, 'current':path, 'q':query})
+  
+@login_required
+def searchtorrents(request,query):
+  h = httplib.HTTPConnection('fenopy.se')
+  h.request('GET','/module/search/api.php?keyword='+query+'&format=json&limit=5')
+  data = h.getresponse().read()
+  return HttpResponse(data,mimetype="application/json")
 
 
+@login_required
 def browse(request,path='home',page=1):
     if page<1: page = 1
     if path == "home":
@@ -308,17 +366,91 @@ def browse(request,path='home',page=1):
         for item in p.page(page):
             inside[item.name] = "%s"%item.name
       else:
-        p = Paginator(os.listdir(canonical),10)
+        p = Paginator(sorted(os.listdir(canonical)),10)
         for item in p.page(page):
             inside[prs(item)] = "%s/%s"%(path,unicode(item.decode('utf-8')))
         inside = OrderedDict(sorted(inside.iteritems()))
-      if page<p.num_pages: page = p.num_pages
+      #if page<p.num_pages: page = p.num_pages
       if path == '': path = 'home'
-      return render_to_response('files.html', {'from': back, 'to':inside, 'current':path,'page':int(page),'pages':p.page_range,"pmax":p.num_pages})
+      return render_to_response('files.html', {'from': back,'user':request.user, 'to':inside, 'current':path,'page':int(page),'pages':p.page_range,"pmax":p.num_pages})
     elif plist[-1].lower().split(".")[-1] in ("mp4","m4v",'ogg'):
-      return render_to_response('video.html', {'from': back, 'media':path, 'title':path.split("/")[-1],'subtitle':subtitles(None,path)})
+      return render_to_response('video.html', {'from': back,'user':request.user, 'media':path, 'title':path.split("/")[-1],'subtitle':subtitles(None,path)})
     elif plist[-1].lower().split(".")[-1]=="mp3":
-      return render_to_response('audio.html', {'from': back, 'media':path, 'title':path.split("/")[-1]})
+      return render_to_response('audio.html', {'from': back,'user':request.user, 'media':path, 'title':path.split("/")[-1]})
     else: return HttpResponseRedirect("//torrentor.zapto.org:942/%s"%path)
 
+
+def check_json(request): 
+      lookup = Process.objects.filter(progress__gt=0).order_by("id").reverse()
+      dump = [{'name':e.name,'progress':e.progress,'status':e.check()[1]} for e in lookup]
+      return HttpResponse(json.dumps(dump),mimetype="application/json")
+
+def browse_json(request,path='home',page=1):
+    if page<1: page = 1
+    if path == "home":
+      path = "" 
+      back = {}
+    else:
+      back = OrderedDict()
+      plist = path.split("/")[1:] if len(path)==0 else path.split("/")
+      conpath = ""
+      for e in plist:
+        conpath += "/%s"%e
+        back[e] = "/browse%s"%conpath
+    inside = OrderedDict()
+    keyst  = []
+    path = smart_text(path)
+    canonical = to_canonical(path)
+    if os.path.isdir(canonical):
+      if path == "":
+        prc = Process.objects.filter(progress=0).order_by("-id")
+        p = Paginator(prc,10)
+        for item in p.page(page):
+            inside[item.name] = "%s"%item.name
+            keyst += [item.name]
+      else:
+        p = Paginator(sorted(os.listdir(canonical)),10)
+        for item in p.page(page):
+            inside[prs(item)] = "%s/%s"%(path,unicode(item.decode('utf-8')))
+            keyst += [prs(item)]
+        inside = OrderedDict(sorted(inside.iteritems()))
+      #if page<p.num_pages: page = p.num_pages
+      #if path == '': path = 'home'
+      return HttpResponse(json.dumps({'from': back, 'to':inside, 'keysto': keyst, 'current':path,'page':int(page),'pmax':p.num_pages}), mimetype="application/json")
+    #elif plist[-1].lower().split(".")[-1] in ("mp4","m4v",'ogg'):
+    #  return render_to_response('video.html', {'from': back,'user':request.user, 'media':path, 'title':path.split("/")[-1],'subtitle':subtitles(None,path)})
+    #elif plist[-1].lower().split(".")[-1]=="mp3":
+    #  return render_to_response('audio.html', {'from': back,'user':request.user, 'media':path, 'title':path.split("/")[-1]})
+    #else: return HttpResponseRedirect("//torrentor.zapto.org:942/%s"%path)
+
+@csrf_exempt
+def upload_json(request):
+    u = int(time.time())
+    l = request.POST['torlink']
+    try:
+      data = urllib2.urlopen(l)
+      buf = StringIO(data.read())
+      f = gzip.GzipFile(fileobj=buf)
+      data = f.read()
+    except:
+      data = urllib2.urlopen(l)
+      data = data.read()
+    with open("/home/can/torrentor/torrents/%d.torrent"%u,"wb") as f:
+        f.write(data)
+    with open("/home/can/torrentor/torrents/%d.torrent"%u) as f:
+        raw = f.read()
+    name = bencode.bdecode(raw)['info']['name']
+    try:
+        length = bencode.bdecode(raw)['info']['length']
+    except:
+        length = 0
+        for file in bencode.bdecode(raw)['info']['files']:
+            length += file['length']
+    proc = Process.objects.create(tlink=l,name=name,length=length,ttype=1,progress=2)
+    proc.save()
+    print to_canonical(name)
+    if(os.path.isdir(to_canonical(name))):
+      if not os.path.exists(to_canonical(name)):
+        os.makedirs(to_canonical(name))
+    return HttpResponse('{"msg":true}',mimetype="application/json") 
 

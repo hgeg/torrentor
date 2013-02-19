@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 from django.db import models
-import os,xmlrpclib,subprocess
+import os,xmlrpclib,subprocess,redis,pickle
 from django.utils.encoding import smart_text
+from django.db.models.signals import pre_init
 from collections import namedtuple
 
 grades = ["bytes","KB","MB","GB","TB","EB","YB"]
@@ -10,8 +11,47 @@ grad_t = ['month','day','hour','min','second']
 grd_tt = [30*24*3600,24*3600,3600,60,1]
 _ntuple_diskusage = namedtuple('usage', 'total used free')
 conn = xmlrpclib.ServerProxy('http://localhost:5151/RPC2')
+r = redis.StrictRedis(host='localhost',port=6379,db=0)
 
 to_canonical = lambda path: ("/home/can/torrentor/downloads/%s/"%path).encode('utf-8')
+
+
+def cache_hash(sender, args, **kwargs):
+  return 0
+  for e in conn.download_list():
+    if args[1] == conn.d.get_base_filename(e):
+      hlist = pickle.loads(r.get('hlist'))
+      progs = pickle.loads(r.get('progs'))
+      hlist += e
+      progs[e] = 3
+      r.set("hlist",pickle.dumps(hlist))
+      r.set("progs",pickle.dumps(progs))
+      return
+
+def check_cached(thash):
+    progs = pickle.loads(r.get('progs'))
+    hlist = pickle.loads(r.get('hlist'))
+    progress = progs[thash]
+    rate = 1
+    if progress>0:
+      rate = down_rate(thash)
+      current = disk_usage(thash)
+      total = disk_total(thash)
+    else:
+      current = disk_total(thash)
+      total = current
+    if current>8 and progress==2:
+        progs[thash] = 1
+    elif total-current<=0 and progress==1:
+        proc = Process.objects.get(category=thash)
+        proc.progress = 0;
+        proc.save()
+        progress=0
+        del hlist[hlist.index(thash)]
+        del progs[thash]
+    r.set("hlist",pickle.dumps(hlist))
+    r.set("progs",pickle.dumps(progs))
+    return ("%s of %s downloaded"%(Process.sizify(current),Process.sizify(total)), int((current*1.0)/total*100), Process.speedify(rate), 'Process.timify(int((self.length-current)/(rate+1)))',sp_rate(thash),conn.d.get_name(thash))
 
 def linkTorrent(proc):
   if not proc.category == '..': return 
@@ -33,13 +73,20 @@ def _total_size(source):
     return total_size
 
 def down_rate(pid):
-  return conn.d.get_down_rate(pid)
+  try:return conn.d.get_down_rate(pid)
+  except: return 0
 
 def sp_rate(pid):
-  return "%d/%d"%(conn.d.get_peers_complete(pid),conn.d.get_peers_accounted(pid))
+  try:return "%d/%d"%(conn.d.get_peers_complete(pid),conn.d.get_peers_accounted(pid))
+  except: return 0
+
+def disk_total(pid):
+  try:return conn.d.get_size_bytes(pid)
+  except: return 0
 
 def disk_usage(pid):
-  return conn.d.get_bytes_done(pid)
+  try:return conn.d.get_bytes_done(pid)
+  except: return 0
 
 # Create your models here.
 class Process(models.Model):
@@ -101,8 +148,13 @@ class Process(models.Model):
         self.progress=1
         self.save()
       if action=="cancel":
-        conn.d.erase(self.category)
+        try:
+          conn.d.erase(self.category)
+        except:pass
         self.delete()
+      progs = pickle.loads(r.get('progs'))
+      progs[self.category] = self.progress
+      r.set("progs",pickle.dumps(progs))
 
     def check(self):
         linkTorrent(self)
@@ -121,4 +173,4 @@ class Process(models.Model):
             self.save()
         return ("%s of %s downloaded"%(Process.sizify(current),Process.sizify(total)), int((current*1.0)/total*100), Process.speedify(rate), 'Process.timify(int((self.length-current)/(rate+1)))',sp_rate(self.category))
 
-
+#pre_init.connect(cache_hash, sender = Process)

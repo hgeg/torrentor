@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/can/torrentor/process.db',                      # Or path to database file if using sqlite3.
+        'NAME': '<PROJECT_PATH>/process.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -22,8 +22,8 @@ DATABASES = {
 
 CONCURRENT_THREADING = False
 
-DOWNLOADS_DIR = <DOWNLOADS_DIR>
-CONVERT_DIR = <CONVERT_DIR>
+DOWNLOADS_DIR = "<DOWNLOADS_DIR>"
+CONVERT_DIR = "<CONVERT_DIR>"
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -36,7 +36,7 @@ TIME_ZONE = 'Europe/Istanbul'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'tr'
 
 SITE_ID = 1
 
@@ -50,7 +50,7 @@ USE_L10N = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/home/can/torrentor/torrents/'
+MEDIA_ROOT = '<TORRENTS_DIR>'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -86,7 +86,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/home/can/torrentor/public/templates"
+    "<PROJECT_PATH>/torrentor/public/templates"
 )
 
 INSTALLED_APPS = (
