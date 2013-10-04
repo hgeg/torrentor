@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Torrentor.lite</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <link href="/static/css/stylish-portfolio.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Side Menu -->
+    <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle"><i class="icon-reorder"></i></a>
+    <div id="sidebar-wrapper">
+      <ul class="sidebar-nav">
+        <a id="menu-close" href="#" class="btn btn-default btn-md pull-right toggle"><i class="icon-remove"></i></a>
+        <li class="sidebar-brand white">Downloading:</li>
+        <li class="smaller white">
+          Breaking.Bad.s04.e12.AXXLE.x264.mp4
+          <div class="progress">
+            <div class="progress-bar progress-bar-sm" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+              <span class="sr-only">60% Complete</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- /Side Menu -->
+  
+    <!-- Full Page Image Header Area -->
+    <div class="header">
+      <div class="vert-text">
+        <h1>Torrentor<small class="smaller">.v2</small></h1>
+        <br><br><br>
+        <form method="post" action="/torrentor/list/" onsubmit="return submitForm(this);"><div class="input-group">
+          <input type="text" class="form-control" placeholder="Search for media or add torrents" name="query"></input>
+          <span class="input-group-btn"> 
+                <button class="btn btn-info" type="submit"><span class="icon-search"></span></button>
+              </span>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3 text-center">
+            <ul class="list-inline">
+              <li><a class="" target="_blank" href="http://github.com/hgeg/torrentor" style="text-decoration:none;"><i class="icon-github icon-2x"></i></a></li>
+              <li><a class="" target="_blank" href="http://twitter.com/trrntr" style="text-decoration:none;"><i class="icon-twitter icon-2x"></i></a></li>
+            </ul>
+            <hr>
+            <p>Copyright &copy; Can Bülbül 2013</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- /Footer -->
+
+  <!-- Bootstrap core JavaScript -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="/static/js/jquery.js"></script>
+  <script src="/static/js/bootstrap.js"></script>
+
+  <!-- Custom JavaScript for the Side Menu - Put in a custom JS file if you want to clean this up -->
+  <script>
+      $$("#menu-close").click(function(e) {
+          e.preventDefault();
+          $$("#sidebar-wrapper").toggleClass("active");
+      });
+  </script>
+  <script>
+      $$("#menu-toggle").click(function(e) {
+          e.preventDefault();
+          $$("#sidebar-wrapper").toggleClass("active");
+      });
+  </script>
+
+  <script type="text/javascript">
+    $$(document).ready(function() {
+      $$("body").css("display", "none");
+      $$("body").fadeIn(500);
+    });
+
+    function submitForm(form) {
+      event.preventDefault();
+      $$("body").fadeOut(200, function() {
+        form.submit();
+      });
+    }
+
+    $$("a.transition").click(function(event){
+        event.preventDefault();
+        linkLocation = this.href;
+        $$("body").fadeOut(500, function(){
+          window.location = linkLocation;
+        });      
+    });
+  </script>
+
+  </body>
+
+</html>
