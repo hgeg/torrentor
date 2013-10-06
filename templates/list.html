@@ -1,4 +1,4 @@
-$def with (query)
+$def with (query,files)
 <!doctype html>
 <html lang="en">
   <head>
@@ -7,7 +7,7 @@ $def with (query)
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Torrentor.lite</title>
+    <title>Torrentor.v2</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/css/bootstrap.css" rel="stylesheet">
@@ -15,6 +15,9 @@ $def with (query)
     <!-- Add custom CSS here -->
     <link href="/static/css/stylish-portfolio.css" rel="stylesheet">
     <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/ico" href="/static/img/favicon.ico">
+
   </head>
 
   <body>
@@ -47,35 +50,19 @@ $def with (query)
         </div>
 
         <div class="row">
-
-          <div class="col-md-3 text-center">
-            <div class="portfolio-item">
-              <a href="/torrentor/media/" class="thumbnail transition"><img class="img-portfolio img-responsive" src="/static/img/portfolio-1.jpg"></a>
-              <h6>Breaking Bad 3x10 "Fly"</h6>
+          $for movie in files
+            <div class="col-md-3 text-center">
+              <div class="portfolio-item">
+                <a href="/torrentor/media:$movie/" class="thumbnail transition"><img class="img-portfolio img-responsive" src="/static/img/portfolio-1.jpg"></a>
+                <h6>$movie</h6>
+              </div>
             </div>
-          </div>
-
         </div>
+
         <a class="btn btn-info btn-md transition" href="/torrentor/" style="position:fixed;top:5px;left:5px;"><span class="icon-arrow-left"></span></a>  
 
       </div>
     </div>
-    <!-- Footer -->
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-md-offset-3 text-center">
-            <ul class="list-inline">
-              <li><a class="" target="_blank" href="http://github.com/hgeg/torrentor" style="text-decoration:none;"><i class="icon-github icon-2x"></i></a></li>
-              <li><a class="" target="_blank" href="http://twitter.com/trrntr" style="text-decoration:none;"><i class="icon-twitter icon-2x"></i></a></li>
-            </ul>
-            <hr>
-            <p>Copyright &copy; Can Bülbül 2013</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-    <!-- /Footer -->
 
   <!-- Bootstrap core JavaScript -->
   <!-- Placed at the end of the document so the pages load faster -->

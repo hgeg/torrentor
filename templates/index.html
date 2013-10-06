@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Torrentor.lite</title>
+    <title>Torrentor.v2</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/css/bootstrap.css" rel="stylesheet">
@@ -14,6 +14,9 @@
     <!-- Add custom CSS here -->
     <link href="/static/css/stylish-portfolio.css" rel="stylesheet">
     <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/ico" href="/static/img/favicon.ico">
+
   </head>
 
   <body>
@@ -39,15 +42,26 @@
     <!-- Full Page Image Header Area -->
     <div class="header">
       <div class="vert-text">
+        <img src="/static/img/logo.png"></img>
         <h1>Torrentor<small class="smaller">.v2</small></h1>
         <br><br><br>
-        <form method="post" action="/torrentor/list/" onsubmit="return submitForm(this);"><div class="input-group">
-          <input type="text" class="form-control" placeholder="Search for media or add torrents" name="query"></input>
-          <span class="input-group-btn"> 
-                <button class="btn btn-info" type="submit"><span class="icon-search"></span></button>
-              </span>
+        <form id="form" method="post" action="/torrentor/q/" onsubmit="return submitForm(this);">
+          <div class="input-group">
+            <input type="text" id="OmniField" onkeyup="input=this.value;keys=true;" class="form-control" placeholder="Search for media or add torrents" name="query" autocomplete=off></input>
+            <span class="input-group-btn"> 
+              <button class="btn btn-info" type="submit"><span class="icon-search"></span></button>
+            </span>
           </div>
         </form>
+
+        <div class="panel panel-default" style="opacity:0;">
+          <div class="panel-body">
+            <b>Best Match:</b> <span id="match">Breaking.bad.s03e19.hdtv-lol.x264.mp4</span>
+            <span id="seeder" class="text-success">0</span>/<span id="leecher" class="text-danger">0</span>
+            <button id="dlMatch" class="btn btn-info pull-right formtransition"><span class="icon-download"></span></button>
+          </div>
+        </div>
+
       </div>
     </div>
     <!-- Footer -->
@@ -57,10 +71,12 @@
           <div class="col-md-6 col-md-offset-3 text-center">
             <ul class="list-inline">
               <li><a class="" target="_blank" href="http://github.com/hgeg/torrentor" style="text-decoration:none;"><i class="icon-github icon-2x"></i></a></li>
-              <li><a class="" target="_blank" href="http://twitter.com/trrntr" style="text-decoration:none;"><i class="icon-twitter icon-2x"></i></a></li>
+              <li><a class="" target="_blank" href="http://twitter.com/alicanblbl" style="text-decoration:none;"><i class="icon-twitter icon-2x"></i></a></li>
             </ul>
             <hr>
             <p>Copyright &copy; Can Bülbül 2013</p>
+            <small>Theme derived from <a href="http://startbootstrap.com/" style="border-bottom:1px dotted #333;text-decoration:none;">Start Bootstrap</a>. Powered by 
+              <a href="http://webpy.org/" style="border-bottom:1px dotted #333;text-decoration:none;">web.py</a>, <a href="http://libtorrent.rakshasa.no/‎" style="border-bottom:1px dotted #333;text-decoration:none;">rtorrent</a> and <a href="http://ffmpeg.org/" style="border-bottom:1px dotted #333;text-decoration:none;">ffmpeg</a>. Background image: C. Monet, <i><a href="http://www.monetpainting.net/paintings/petitbras.php" style="border-bottom:1px dotted #333;text-decoration:none;">"The Petite Bras d'Argenteuil"</a></i></small>
           </div>
         </div>
       </div>
@@ -90,6 +106,7 @@
     $$(document).ready(function() {
       $$("body").css("display", "none");
       $$("body").fadeIn(500);
+      setInterval("search(input);keys=false;",800);
     });
 
     function submitForm(form) {
@@ -106,6 +123,40 @@
           window.location = linkLocation;
         });      
     });
+
+    $$(".formtransition").click(function(event){
+        event.preventDefault();
+        $$("body").fadeOut(300, function(){
+          $$('#OmniField').val(torrent);
+          form.submit();
+        });      
+    });
+
+    keys = false;
+    input = ""
+    oldinput = ""
+    query = "5";
+    torrent = "";
+
+    function search(input){
+      if(input.length==0 || !$$('#OmniField').is(":focus")) {
+        $$('.panel').animate({ opacity: 0 });
+      }
+      if((input.length<4 || oldinput==input) || keys) return false;
+      bufferTime=3
+      console.log('invoked');
+      $$.post("/torrentor/json:match/", '{"query":"'+input+'"}',
+        function(r) {
+        data = r[0];
+        console.log(data);
+        $$('#match').text(data.name);
+        torrent = data.torrent;
+        $$('#seeder').text(data.seeder);
+        $$('#leecher').text(data.leecher);
+        $$('.panel').animate({ opacity: 1 });
+      },"json");  
+      oldinput = input;
+    }
   </script>
 
   </body>

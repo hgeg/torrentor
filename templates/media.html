@@ -1,3 +1,4 @@
+$def with (movie)
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,22 +7,31 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Torrentor.lite</title>
+    <title>Torrentor.v2</title>
 
     <script src="http://api.html5media.info/1.1.6/html5media.min.js"></script>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
 
     <!-- Add custom CSS here -->
-    <link href="css/stylish-portfolio.css" rel="stylesheet">
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/stylish-portfolio.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/ico" href="/static/img/favicon.ico">
+
   </head>
 
   <body>
 
+    <video id="player" controls preload="auto" width="100%">
+     <source src="/static/media/$movie" type='video/webm'>
+    </video>
+
+    <a class="btn btn-info btn-md transition non-media-ui-element" href="#" style="position:fixed;top:5px;left:5px;"><span class="icon-arrow-left"></span></a> 
+
     <!-- Side Menu -->
-    <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle"><i class="icon-reorder"></i></a>
+    <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle non-media-ui-element"><i class="icon-reorder"></i></a>
     <div id="sidebar-wrapper">
       <ul class="sidebar-nav">
         <a id="menu-close" href="#" class="btn btn-default btn-md pull-right toggle"><i class="icon-remove"></i></a>
@@ -37,73 +47,57 @@
       </ul>
     </div>
     <!-- /Side Menu -->
-  
-    <div class="portfolio">
+      <br>
       <div class="container">
         <div class="row">
           <div class="col-md-4 col-md-offset-4 text-center">
-            <h4>Breaking Bad 3 x 09 "Fly"</h4>
-            <hr>
+            <span class="non-media-ui-element" style="color:white;">$movie</span>
           </div>
         </div>
       </div>
-    </div>
 
     <section>
       <div class="container">
-            <video id="player" controls preload="auto" width="100%" height="480">
-             <source src="http://video.webmfiles.org/big-buck-bunny_trailer.webm" type='video/webm'>
-            </video>
       </section>
     </div>
-    <!-- Footer -->
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-md-offset-3 text-center">
-            <ul class="list-inline">
-              <li><a class="" target="_blank" href="http://github.com/hgeg/torrentor" style="text-decoration:none;"><i class="icon-github icon-2x"></i></a></li>
-              <li><a class="" target="_blank" href="http://twitter.com/trrntr" style="text-decoration:none;"><i class="icon-twitter icon-2x"></i></a></li>
-            </ul>
-            <hr>
-            <p>Copyright &copy; Can Bülbül 2013</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-    <!-- /Footer -->
 
   <!-- Bootstrap core JavaScript -->
   <!-- Placed at the end of the document so the pages load faster -->
-  <script src="js/jquery.js"></script>
-  <script src="js/bootstrap.js"></script>
+  <script src="/static/js/jquery.js"></script>
+  <script src="/static/js/bootstrap.js"></script>
 
   <!-- Custom JavaScript for the Side Menu - Put in a custom JS file if you want to clean this up -->
   <script>
-      $("#menu-close").click(function(e) {
+      $$("#menu-close").click(function(e) {
           e.preventDefault();
-          $("#sidebar-wrapper").toggleClass("active");
+          $$("#sidebar-wrapper").toggleClass("active");
       });
   </script>
   <script>
-      $("#menu-toggle").click(function(e) {
+      $$("#menu-toggle").click(function(e) {
           e.preventDefault();
-          $("#sidebar-wrapper").toggleClass("active");
+          $$("#sidebar-wrapper").toggleClass("active");
       });
   </script>
 
   <script type="text/javascript">
-    $(document).ready(function() {
-      $("body").css("display", "none");
-      $("body").fadeIn(500);
+    $$(document).ready(function() {
+      $$("body").css("display", "none");
+      $$("body").fadeIn(500);
     });
 
-    $("a.transition").click(function(event){
+    $$("a.transition").click(function(event){
         event.preventDefault();
-        linkLocation = this.href;
-        $("body").fadeOut(500, function(){
-          window.location = linkLocation;
-        });      
+        $$("body").fadeOut(500, function(){
+          history.back();
+        });
+    });
+
+    $$("#player").on("play", function (e) {
+      $$(".non-media-ui-element").fadeOut(500);
+    });
+    $$("#player").on("pause", function (e) {
+      $$(".non-media-ui-element").fadeIn(500);
     });
   </script>
 

@@ -5343,15 +5343,19 @@ a.list-group-item:focus {
 }
 
 .panel {
+  margin-left: 5%;
+  width: 90%;
   margin-bottom: 20px;
   background-color: #ffffff;
-  border: 1px solid transparent;
-  border-radius: 4px;
+  border: 0px solid transparent;
+  border-top: 1px solid transparent;
+  border-radius: 0px;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
           box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .panel-body {
+  text-align: left;
   padding: 15px;
 }
 
@@ -6831,3 +6835,16 @@ td.visible-print {
     display: none !important;
   }
 }
+
+#player { 
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: auto;
+  overflow: hidden; 
+}
+
+
