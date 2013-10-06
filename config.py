@@ -4,7 +4,7 @@ import os,sys
 content = ""
 BASE_DIR = os.getcwd()
 print "BASE_DIR:",BASE_DIR
-HOME_DIR = ospath..expanduser("~")
+HOME_DIR = ospath.expanduser("~")
 print "HOME_DIR:",HOME_DIR
 
 with open('runapps.sh','r') as f:
