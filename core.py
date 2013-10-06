@@ -19,8 +19,7 @@ def get_lan_ip():
       try:
         ip = get_interface_ip(ifname)
         break
-      except IOError:
-    pass
+      except IOError: pass
   return ip
 
 urls = (
