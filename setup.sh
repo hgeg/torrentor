@@ -9,7 +9,7 @@ python config.py
 echo "Finished. Running services...        "
 echo "Finished. If you haven't done already, update"
 echo ""
-./runapps.sh
+./runapps.sh $1
 echo "Your server settings for fcgi handling.   "
 echo ""
 echo "---------------------------------------------"
