@@ -10,7 +10,7 @@ echo "Finished. Running services...        "
 echo "Finished. If you haven't done already,"
 echo "update your server settings for fcgi handling."
 echo ""
-./runapps.sh $1
+./runapps.sh
 echo ""
 echo "---------------------------------------------"
 echo "For more info: gitub.com/hgeg/torrentor   "
