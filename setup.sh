@@ -5,7 +5,8 @@ echo ""
 sudo ./install_prereq.sh
 echo "Finished. Now setting up config files...   "
 echo ""
-python config.py $1
+cp rtorrent.rc ~/.rtorrent.rc
+python config.py "$1"
 echo "Finished. Running services...        "
 echo "Finished. If you haven't done already,"
 echo "update your server settings for fcgi handling."
