@@ -2,8 +2,26 @@
 # -*- coding utf-8 -*-
 from __future__ import with_statement
 import web,requests,json,redis,re,time,urllib
-import os,sys
+import os,sys,socket,fcntl,struct
 import settings
+
+
+#Methods to get interface data
+def get_interface_ip(ifname):
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, struct.pack('256s', ifname[:15]))[20:24])
+
+def get_lan_ip():
+  ip = socket.gethostbyname(socket.gethostname())
+  if ip.startswith("127.") and os.name != "nt":
+    interfaces = ["eth0", "eth1", "eth2", "wlan0", "wlan1", "wifi0", "ath0", "ath1", "ppp0",]
+    for ifname in interfaces:
+      try:
+        ip = get_interface_ip(ifname)
+        break
+      except IOError:
+    pass
+  return ip
 
 urls = (
   '/torrentor',             'Main',
@@ -55,6 +73,7 @@ class JSON:
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
 
 if __name__ == '__main__':
+  sys.argv.append("%s:80"%get_lan_ip())
   #app.internalerror = web.debugerror
-  web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+  #web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
   app.run()
