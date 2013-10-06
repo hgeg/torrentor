@@ -15,7 +15,7 @@ with open('settings.py','w') as f:
 
 with open('rtorrent.rc','r') as f:
   content = f.read()
-with open('~/.rtorrent.rc','w') as f:
+with open('~/.rtorrent.rc','w+') as f:
   f.write(content.replace('<BASE_DIR',BASE_DIR))
 
 
