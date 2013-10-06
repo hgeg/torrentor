@@ -7,10 +7,10 @@ echo "Finished. Now setting up config files...   "
 echo ""
 python config.py
 echo "Finished. Running services...        "
-echo "Finished. If you haven't done already, update"
+echo "Finished. If you haven't done already,"
+echo "update your server settings for fcgi handling."
 echo ""
 ./runapps.sh $1
-echo "Your server settings for fcgi handling.   "
 echo ""
 echo "---------------------------------------------"
 echo "For more info: gitub.com/hgeg/torrentor   "
