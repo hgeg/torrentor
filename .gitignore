@@ -6,8 +6,7 @@
 local_settings.py
 local_rtorrent.rc
 torrents
-media
 downloads
 session
 finished
-static/media
+static/media/*
