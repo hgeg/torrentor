@@ -18,7 +18,7 @@ with open('settings.py','w+') as f:
 with open('%s/rtorrent.rc'%SETUP_DIR,'r') as f:
   content = f.read()
 with open('%s/.rtorrent.rc'%HOME_DIR,'w+') as f:
-  print f.abspath
+  print '%s/.rtorrent.rc'%HOME_DIR
   f.write(content.replace('<BASE_DIR>',BASE_DIR))
 
 
