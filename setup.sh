@@ -3,6 +3,7 @@ echo "---------------------------------------------"
 echo "Trying to install prerequisites       "
 echo ""
 echo $1
+
 ./install_prereq.sh
 echo "Finished. Now setting up config files...   "
 echo ""
