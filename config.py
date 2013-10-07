@@ -5,6 +5,7 @@ content = ""
 BASE_DIR = sys.argv[1]
 SETUP_DIR = os.getcwd()
 HOME_DIR = os.path.expanduser("~")
+USER = sys.argv[2]
 with open('runapps.sh','r') as f:
   content = f.read()
 with open('runapps.sh','w+') as f:
