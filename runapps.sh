@@ -2,7 +2,7 @@ sudo killall rtorrent
 sudo killall core.py
 echo "creating directiories"
 mkdir <DATA_DIR>/downloads
-mkdir <DATA_DIR>/finished
+#mkdir <DATA_DIR>/finished
 mkdir <DATA_DIR>/media
 mkdir <SITE_DIR>/session
 mkdir <SITE_DIR>/torrents
