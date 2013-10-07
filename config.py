@@ -3,6 +3,7 @@ import os,sys
 
 content = ""
 BASE_DIR = sys.argv[1]
+SETUP_DIR = os.getcwd()
 HOME_DIR = os.path.expanduser("~")
 with open('runapps.sh','r') as f:
   content = f.read()
@@ -14,9 +15,9 @@ with open('settings.py','r') as f:
 with open('settings.py','w+') as f:
   f.write(content.replace('<BASE_DIR>',BASE_DIR))
 
-with open('%s/.rtorrent.rc'%HOME_DIR,'r') as f:
+with open('%s/rtorrent.rc'%SETUP_DIR,'r') as f:
   content = f.read()
-with open('%s/.rtorrent.rc'%HOME_DIR,'w+') as f:
+with open('%s/rtorrent.rc'%SETUP_DIR,'w') as f:
   f.write(content.replace('<BASE_DIR>',BASE_DIR))
 
 
