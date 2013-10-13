@@ -7,6 +7,7 @@ echo ""
 echo "Finished. Now setting up config files..."
 echo ""
 python config.py $1 $2 
+mv .rtorrent.rc $HOME/.rtorrent.rc
 echo "Finished. Running services..."
 echo ""
 ./runapps.sh
