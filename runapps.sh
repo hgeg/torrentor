@@ -8,7 +8,7 @@ mkdir <SITE_DIR>/session
 mkdir <SITE_DIR>/torrents
 echo "kill previous processes"
 sudo kill `pgrep -f rtorrent` 
-sudo kill `pgrep -f core.py` 
+ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
 echo "running rtorrent"
 screen -S rtorrent  -d -m rtorrent
 echo "running web layer"
