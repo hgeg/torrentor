@@ -1,17 +1,15 @@
 echo "      Welcome to Torrentor.v2 installer      "
 echo "---------------------------------------------"
-echo "Trying to install prerequisites       "
+echo "Trying to install prerequisites"
 echo ""
 
 ./install_prereq.sh
-echo "Finished. Now setting up config files...   "
+echo "Finished. Now setting up config files..."
 echo ""
 python config.py $1 $2 
-echo "Finished. Running services...        "
-echo "Finished. If you haven't done already,"
-echo "update your server settings for fcgi handling."
+echo "Finished. Running services..."
 echo ""
 ./runapps.sh
 echo ""
 echo "---------------------------------------------"
-echo "For more info: gitub.com/hgeg/torrentor   "
+echo "For more info: gitub.com/hgeg/torrentor"

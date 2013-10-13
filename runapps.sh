@@ -1,13 +1,14 @@
-sudo killall rtorrent
-sudo killall core.py
 echo "creating directiories"
 mkdir <DATA_DIR>/downloads
+#media conversion dirs
+#will add later
+#mkdir <DATA_DIR>/converting
 #mkdir <DATA_DIR>/finished
 mkdir <DATA_DIR>/media
 mkdir <SITE_DIR>/session
 mkdir <SITE_DIR>/torrents
 echo "kill previous processes"
-sudo kill `pgrep -f rtorrent` 
+ps ax | grep rtorrent | cut -c 1-5 | sudo xargs kill
 ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
 echo "running rtorrent"
 screen -S rtorrent  -d -m rtorrent

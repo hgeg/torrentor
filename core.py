@@ -27,7 +27,7 @@ urls = (
   '/torrentor/',            'Main',
   '/torrentor/q/',          'Query',
   '/torrentor/media:(.+)/', 'Media',
-  '/torrentor/mediaserve/(.*)/' , 'MServer'
+  '/torrentor/mediaserve/(.*)/' , 'MServer',
   #json views
   '/torrentor/json:(.+)/',  'JSON'
 )
