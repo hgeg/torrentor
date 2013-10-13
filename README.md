@@ -10,7 +10,7 @@ Torrentor.v2 is the lightweight, easily installed, and optimized version of clas
 ---------------
 * Download Deployment script [from here](https://hgeg.io/misc/deploy) into the folder you want to install torrentor.
 
-* open it with your favorite text editor, then change ```DATA_DIR``` variable to a desired path for your downloads. Normally this would be the root directory of your
+* open it with your favorite text editor, then change ```DATA_DIR``` variable to a desired path for your downloads. Normally this would be the root directory of your storage space(e.g. external harddisk).
 
 * Make it executable by typing ``` chmod +x deploy ```
 
