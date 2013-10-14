@@ -57,7 +57,12 @@ class Query:
 
 class Media:
   def GET(self,movie):
-    return render.media(movie)
+    filepath = '%s/%s'%(settings.MEDIA_DIR,movie)                                                                                                                                
+    if not os.path.isdir(filepath):
+      source = movie
+    else:
+      source = ['%s/%s'%(movie,e) for e in os.listdir(filepath) if '.mp4' in e][0]
+    return render.media(movie,source)
   def POST(self):
     return render.index()
 

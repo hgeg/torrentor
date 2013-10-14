@@ -1,4 +1,4 @@
-$def with (movie)
+$def with (movie,source)
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,7 +25,7 @@ $def with (movie)
   <body>
 
     <video id="player" controls preload="auto" width="100%">
-     <source src="/static/media/$movie" type='video/webm'>
+     <source src="/static/media/$source" type='video/webm'>
     </video>
 
     <a class="btn btn-info btn-md transition non-media-ui-element" href="#" style="position:fixed;top:5px;left:5px;"><span class="icon-arrow-left"></span></a> 

@@ -7,6 +7,7 @@ mkdir <DATA_DIR>/downloads
 mkdir <DATA_DIR>/media
 mkdir <SITE_DIR>/session
 mkdir <SITE_DIR>/torrents
+ln -s <DATA_DIR>/media static/media
 echo "kill previous processes"
 ps ax | grep rtorrent | cut -c 1-5 | sudo xargs kill
 ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
