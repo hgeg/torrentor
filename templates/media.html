@@ -23,9 +23,11 @@ $def with (movie,source)
   </head>
 
   <body>
+    <div style="background-color:#000;top:0px;left:0px;width:100%;height:100%;z-index:-1;"></div>
 
     <video id="player" controls preload="auto" width="100%">
      <source src="/static/media/$source" type='video/webm'>
+      <img src="/static/img/notfound.png">Video not found!</img> 
     </video>
 
     <a class="btn btn-info btn-md transition non-media-ui-element" href="#" style="position:fixed;top:5px;left:5px;"><span class="icon-arrow-left"></span></a> 

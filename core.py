@@ -24,7 +24,7 @@ def get_lan_ip():
 
 def checktype(f):
   typ = "file"
-  if os.isdir("f"): typ = "dir"
+  if os.path.isdir(f): typ = "dir"
   elif reduce(lambda x,y:x|y, map(lambda x: x in f, ('mp4','ogv','webm'))):
     typ = 'mov'
   elif reduce(lambda x,y:x|y, map(lambda x: x in f, ('jpg','png','gif','jpeg'))):
@@ -35,8 +35,8 @@ urls = (
   '/torrentor',             'Main',
   '/torrentor/',            'Main',
   '/torrentor/q/',          'Query',
+  '/torrentor/l/(.+)',      'List',
   '/torrentor/media:(.+)/', 'Media',
-  '/torrentor/mediaserve/(.*)/' , 'MServer',
   #json views
   '/torrentor/json:(.+)/',  'JSON'
 )
@@ -62,22 +62,20 @@ class Query:
         f.write(requests.get(query,stream=True).content)
       return web.redirect('/torrentor/')
     else:
-      return render.list(query,[e for e in os.listdir(settings.MEDIA_DIR) if query in e.lower()])
+      path = settings.MEDIA_DIR
+      files = [(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path) if query.lower() in e.lower()]
+      return render.list(query,path,files)
 
-class Media:
+class List:
   def GET(self,path):
-    files = [(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path)]
-    return render.media(path,files)
+    abs_path = "%s/%s"%(settings.MEDIA_DIR,path)
+    if(os.path.isdir(abs_path)):
+      files = [(e,checktype("%s/%s"%(path,e))) for e in os.listdir(abs_path)]
+      return render.list(path,path,files)
+    else:
+      return render.media(path.split('/')[-1],path)
   def POST(self):
     return render.index()
-
-class MServer:
-   def GET(self, file):
-     try:
-       f = open('%s/%s'%(MEDIA_DIR,file), 'rb')
-       return f.read()
-     except:
-      return web.redirect('/torrentor/')
 
 class JSON:
   def GET(self,call): pass
