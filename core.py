@@ -22,6 +22,15 @@ def get_lan_ip():
       except IOError: pass
   return ip
 
+def checktype(f):
+  typ = "file"
+  if os.isdir("f"): typ = "dir"
+  elif reduce(lambda x,y:x|y, map(lambda x: x in f, ('mp4','ogv','webm'))):
+    typ = 'mov'
+  elif reduce(lambda x,y:x|y, map(lambda x: x in f, ('jpg','png','gif','jpeg'))):
+    typ = 'pic'
+  return typ
+
 urls = (
   '/torrentor',             'Main',
   '/torrentor/',            'Main',
@@ -56,13 +65,9 @@ class Query:
       return render.list(query,[e for e in os.listdir(settings.MEDIA_DIR) if query in e.lower()])
 
 class Media:
-  def GET(self,movie):
-    filepath = '%s/%s'%(settings.MEDIA_DIR,movie)                                                                                                                                
-    if not os.path.isdir(filepath):
-      source = movie
-    else:
-      source = ['%s/%s'%(movie,e) for e in os.listdir(filepath) if '.mp4' in e][0]
-    return render.media(movie,source)
+  def GET(self,path):
+    files = [(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path)]
+    return render.media(path,files)
   def POST(self):
     return render.index()
 

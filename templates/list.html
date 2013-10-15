@@ -1,4 +1,4 @@
-$def with (query,files)
+$def with (path,files)
 <!doctype html>
 <html lang="en">
   <head>
@@ -44,7 +44,7 @@ $def with (query,files)
       <div class="container">
         <div class="row">
           <div class="col-md-4 col-md-offset-4 text-center">
-            <h4>Results for "$query"</h4>
+            <h4>Results for "$path"</h4>
             <hr>
           </div>
         </div>
@@ -53,8 +53,8 @@ $def with (query,files)
           $for movie in files
             <div class="col-md-3 text-center">
               <div class="portfolio-item">
-                <a href="/torrentor/media:$movie/" class="thumbnail transition"><img class="img-portfolio img-responsive" src="/static/img/portfolio-1.jpg"></a>
-                <h6>$movie</h6>
+                <a href="/torrentor/media:$path+'/'+$movie[0]/" class="thumbnail transition"><img class="img-portfolio img-responsive" src="/static/img/$movie[1]+'.png'"></a>
+                <h6>$movie[0]</h6>
               </div>
             </div>
         </div>
