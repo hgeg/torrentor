@@ -64,14 +64,14 @@ class Query:
     else:
       path = settings.MEDIA_DIR
       files = [(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path) if query.lower() in e.lower()]
-      return render.list(query,path,files)
+      return render.list(query,files)
 
 class List:
   def GET(self,path):
     abs_path = "%s/%s"%(settings.MEDIA_DIR,path)
     if(os.path.isdir(abs_path)):
       files = [(e,checktype("%s/%s"%(path,e))) for e in os.listdir(abs_path)]
-      return render.list(path,path,files)
+      return render.list(path,files)
     else:
       return render.media(path.split('/')[-1],path)
   def POST(self):

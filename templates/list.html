@@ -1,4 +1,4 @@
-$def with (query,path,files)
+$def with (query,files)
 <!doctype html>
 <html lang="en">
   <head>
@@ -44,7 +44,10 @@ $def with (query,path,files)
       <div class="container">
         <div class="row">
           <div class="col-md-4 col-md-offset-4 text-center">
-            <h4>Results for "$query"</h4>
+            $if query == "":
+              <h4>All Downloads</h4>
+            $else:  
+              <h4>Results for "$query"</h4>
             <hr>
           </div>
         </div>
@@ -53,13 +56,21 @@ $def with (query,path,files)
           $for movie in files
             <div class="col-md-3 text-center">
               <div class="portfolio-item">
-                <a class="transition" href="/torrentor/l/$movie[0]/"><img class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"></a>
+                <a class="transition" href="/torrentor/l/$query$movie[0]/"><img class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"></a>
                 <h6>$movie[0]</h6>
               </div>
             </div>
         </div>
 
-        <a class="btn btn-info btn-md transition" href="/torrentor/" style="position:fixed;top:5px;left:5px;"><span class="icon-arrow-left"></span></a>  
+        <a class="btn btn-info btn-md transition" href="#" onclick="goback();" style="position:fixed;top:5px;left:5px;"><span class="icon-arrow-left"></span></a>  
+        <script type="text/javascript">
+          function goback() {
+            event.preventDefault();
+            $$("body").fadeOut(500, function(){
+              history.back();
+            });
+          }
+        </script>
 
       </div>
     </div>
