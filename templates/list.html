@@ -1,4 +1,4 @@
-$def with (query,files)
+$def with (query,files,indexing)
 <!doctype html>
 <html lang="en">
   <head>
@@ -44,8 +44,8 @@ $def with (query,files)
       <div class="container">
         <div class="row">
           <div class="col-md-4 col-md-offset-4 text-center">
-            $if query == "":
-              <h4>All Downloads</h4>
+            $if indexing:
+              <h4>Index of "$query"</h4>
             $else:  
               <h4>Results for "$query"</h4>
             <hr>
@@ -54,23 +54,39 @@ $def with (query,files)
 
         <div class="row">
           $for movie in files
-            <div class="col-md-3 text-center">
+            <div class="col-md-2 text-center">
               <div class="portfolio-item">
-                <a class="transition" href="/torrentor/l/$query$movie[0]/"><img class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"></a>
-                <h6>$movie[0]</h6>
+                $if movie[1] == 'mov':
+                  <a role="button" data-toggle="modal" href="#outselect">
+                    <img width="48" class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"/>
+                  </a>
+                $else:
+                  $if indexing: <a class="transition" href="/torrentor/l/$query$movie[0]/">
+                  $else:  <a class="transition" href="/torrentor/l/$movie[0]/">
+                  <img width="48" class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"/>
+                  </a>
+                <h6 style="white-space: nowrap;">$(movie[0][:16]+'...' if len(movie[0])>=20 else movie[0])</h6>
               </div>
             </div>
         </div>
 
-        <a class="btn btn-info btn-md transition" href="#" onclick="goback();" style="position:fixed;top:5px;left:5px;"><span class="icon-arrow-left"></span></a>  
-        <script type="text/javascript">
-          function goback() {
-            event.preventDefault();
-            $$("body").fadeOut(500, function(){
-              history.back();
-            });
-          }
-        </script>
+        <div id="outselect" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Modal header</h3>
+          </div>
+          <div class="modal-body">
+            <p>One fine body…</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            <button class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+
+        <a class="btn btn-info btn-md transition" href="javascript:history.go(-1);" style="position:fixed;top:5px;left:5px;">
+          <span class="icon-arrow-left"></span>
+        </a>
 
       </div>
     </div>
@@ -86,24 +102,21 @@ $def with (query,files)
           e.preventDefault();
           $$("#sidebar-wrapper").toggleClass("active");
       });
-  </script>
-  <script>
+
       $$("#menu-toggle").click(function(e) {
           e.preventDefault();
           $$("#sidebar-wrapper").toggleClass("active");
       });
-  </script>
 
-  <script type="text/javascript">
     $$(document).ready(function() {
       $$("body").css("display", "none");
-      $$("body").fadeIn(500);
+      $$("body").fadeIn(1000);
     });
 
     $$("a.transition").click(function(event){
         event.preventDefault();
         linkLocation = this.href;
-        $$("body").fadeOut(500, function(){
+        $$("body").fadeOut(400, function(){
           window.location = linkLocation;
         });      
     });

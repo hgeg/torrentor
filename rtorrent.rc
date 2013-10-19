@@ -1,7 +1,7 @@
 min_peers = 50
 max_peers = 80
 port_range = 60125-64125
-#scgi_port = 127.0.0.1:5000
+scgi_port = 127.0.0.1:5000
 encoding_list = UTF-8
 min_peers_seed = 10
 max_peers_seed = 50

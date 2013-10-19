@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding utf-8 -*-
 from __future__ import with_statement
+from subprocess import call as runCommand
+#from twatch import *
 import web,requests,json,redis,re,time,urllib
 import os,sys,socket,fcntl,struct
 import settings
-
 
 #Methods to get interface data
 def get_interface_ip(ifname):
@@ -35,7 +36,7 @@ urls = (
   '/torrentor',             'Main',
   '/torrentor/',            'Main',
   '/torrentor/q/',          'Query',
-  '/torrentor/l/(.+)',      'List',
+  '/torrentor/l/(.*)',      'List',
   '/torrentor/media:(.+)/', 'Media',
   #json views
   '/torrentor/json:(.+)/',  'JSON'
@@ -62,16 +63,19 @@ class Query:
         f.write(requests.get(query,stream=True).content)
       return web.redirect('/torrentor/')
     else:
+      if query == '': return web.redirect('/torrentor/l/')
       path = settings.MEDIA_DIR
       files = [(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path) if query.lower() in e.lower()]
-      return render.list(query,files)
+      return render.list(query,files,False)
 
 class List:
   def GET(self,path):
     abs_path = "%s/%s"%(settings.MEDIA_DIR,path)
+    if path == '': path = '/'
+    if not path[-1] == '/': path = "%s/"%path 
     if(os.path.isdir(abs_path)):
-      files = [(e,checktype("%s/%s"%(path,e))) for e in os.listdir(abs_path)]
-      return render.list(path,files)
+      files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path)]
+      return render.list(path,files,True)
     else:
       return render.media(path.split('/')[-1],path)
   def POST(self):
@@ -82,11 +86,14 @@ class JSON:
   def POST(self,call):
     web.header('Content-Type', 'application/json')
     post = json.loads(web.data())
-    if call=='match':
+    if call == 'match':
       query = post["query"];
       found = [e for e in os.listdir(settings.MEDIA_DIR) if query in e.lower()]
       if(found): return '[{"name":"%s","seeders":0,"leechers":0,"torrent":""}]'%found[0]
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
+    if call == 'playHDMI':
+      runCommand(["screen", "-S", "omx", "-X", "quit"])
+      runCommand(["screen", "-dmS", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
 
 if __name__ == '__main__':
   sys.argv.append("%s:8092"%get_lan_ip())
