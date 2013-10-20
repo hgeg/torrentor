@@ -54,7 +54,7 @@ $def with (query,files,indexing)
 
         <div class="row">
           $for movie in files
-            <div class="col-md-2 text-center">
+            <div class="col-md-2 col-sm-4 col-xs-6 text-center">
               <div class="portfolio-item">
                 $if movie[1] == 'mov':
                   <a data-toggle="modal" href="#outselect" onclick="passData('$query','$movie[0]','$movie[0][-3:]');">
