@@ -65,25 +65,29 @@ $def with (query,files,indexing)
                   $else:  <a class="transition" href="/torrentor/l/$movie[0]/">
                   <img width="48" class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"/>
                   </a>
-                <h6 style="white-space: nowrap;">$(movie[0][:16]+'...' if len(movie[0])>=20 else movie[0])</h6>
+                <h6 style="white-space: nowrap;">$(movie[0][:22]+'...' if len(movie[0])>=25 else movie[0])</h6>
               </div>
             </div>
         </div>
+
         <script type="text/javascript">
           function passData(path, target,type) {
             console.log(type);
             if(type!='mp4'){
               document.getElementById('devicePlay').href = '#';
-              document.getElementById('deviceIcon').src = '/static/img/device_no.png';
+              document.getElementById('deviceIcon').src = '/static/img/device_no.png';              
+              document.getElementById('deviceText').text = 'This device'
+
             }else{
               $if indexing: document.getElementById('devicePlay').href = '/torrentor/l'+path+target+'/';
               $else: document.getElementById('devicePlay').href = '/torrentor/l/'+target+'/';
               document.getElementById('deviceIcon').src = '/static/img/device.png';
+              document.getElementById('deviceText').text = 'Cannot play on this device.'
             }
             document.getElementById('hdmiPlay').onclick = function(){
               $$.post('/torrentor/json:playHDMI/','{"path":"$(query if indexing else "")'+target+'"}',function(data){
                   console.log(data);
-                  //$$('#outselect').hide()
+                  $$('#outselect').hide()
                 },'json');
             }
           }
@@ -103,7 +107,7 @@ $def with (query,files,indexing)
                         <a id="devicePlay" href="">
                           <img id="deviceIcon" height="96" class="img-portfolio img-responsive" src="/static/img/device.png"/>
                         </a>
-                        <h6 style="white-space: nowrap;">This device</h6>
+                        <h6 id="deviceText" style="white-space: nowrap;">This device</h6>
                       </div>
                     </div>
                     <div class="col-md-6 text-center">

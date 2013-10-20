@@ -26,7 +26,7 @@ def get_lan_ip():
 def checktype(f):
   typ = "file"
   if os.path.isdir(f): typ = "dir"
-  elif reduce(lambda x,y:x|y, map(lambda x: x in f, ('mp4','ogv','webm'))):
+  elif reduce(lambda x,y:x|y, map(lambda x: x in f, ('mp4','ogv','webm','avi','mkv'))):
     typ = 'mov'
   elif reduce(lambda x,y:x|y, map(lambda x: x in f, ('jpg','png','gif','jpeg'))):
     typ = 'pic'
