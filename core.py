@@ -94,6 +94,7 @@ class JSON:
     if call == 'playHDMI':
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       runCommand(["screen", "-dmS", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
+      return('Playing...')
 
 if __name__ == '__main__':
   sys.argv.append("%s:8092"%get_lan_ip())

@@ -57,7 +57,7 @@ $def with (query,files,indexing)
             <div class="col-md-2 text-center">
               <div class="portfolio-item">
                 $if movie[1] == 'mov':
-                  <a role="button" data-toggle="modal" href="#outselect">
+                  <a data-toggle="modal" href="#outselect" onclick="passData('$query','$movie[0]','$movie[0][-3:]');">
                     <img width="48" class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"/>
                   </a>
                 $else:
@@ -69,20 +69,56 @@ $def with (query,files,indexing)
               </div>
             </div>
         </div>
+        <script type="text/javascript">
+          function passData(path, target,type) {
+            console.log(type);
+            if(type!='mp4'){
+              document.getElementById('devicePlay').href = '#';
+              document.getElementById('deviceIcon').src = '/static/img/device_no.png';
+            }else{
+              $if indexing: document.getElementById('devicePlay').href = '/torrentor/l'+path+target+'/';
+              $else: document.getElementById('devicePlay').href = '/torrentor/l/'+target+'/';
+              document.getElementById('deviceIcon').src = '/static/img/device.png';
+            }
+            document.getElementById('hdmiPlay').onclick = function(){
+              $$.post('/torrentor/json:playHDMI/','{"path":"$(query if indexing else "")'+target+'"}',function(data){
+                  console.log(data);
+                  //$$('#outselect').hide()
+                },'json');
+            }
+          }
+        </script>
 
-        <div id="outselect" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Modal header</h3>
-          </div>
-          <div class="modal-body">
-            <p>One fine body…</p>
-          </div>
-          <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <button class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
+        <div class="modal fade" id="outselect" tabindex="-1" role="dialog" aria-labelledby="outselectlabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Play the media on...</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                      <div class="portfolio-item">
+                        <a id="devicePlay" href="">
+                          <img id="deviceIcon" height="96" class="img-portfolio img-responsive" src="/static/img/device.png"/>
+                        </a>
+                        <h6 style="white-space: nowrap;">This device</h6>
+                      </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                      <div class="portfolio-item">
+                        <a id="hdmiPlay">
+                          <img height="96" class="img-portfolio img-responsive" src="/static/img/hdmi.png"/>
+                        </a>
+                        <h6 style="white-space: nowrap;">HDMI output</h6>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
         <a class="btn btn-info btn-md transition" href="javascript:history.go(-1);" style="position:fixed;top:5px;left:5px;">
           <span class="icon-arrow-left"></span>
