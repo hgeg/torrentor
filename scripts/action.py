@@ -17,7 +17,7 @@ def remove_form_list(filename):
 
 def add_to_list(filename):
   db = shelve.open("downloads")
-  lst = downloads['list']
+  lst = db['list']
   lst += [filename]
   if len(lst)>10:
     lst.reverse()
