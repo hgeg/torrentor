@@ -184,7 +184,8 @@ i.service-icon:hover {
 }
 
 .portfolio-item {
-  margin-bottom: 25px;
+    margin-bottom: 25px;
+    min-height: 160px;
 }
 
 .img-portfolio {

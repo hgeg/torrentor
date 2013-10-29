@@ -1,13 +1,13 @@
-min_peers = 50
-max_peers = 80
+min_peers = 20
+max_peers = 120
 port_range = 60125-64125
-scgi_port = 127.0.0.1:5000
+#scgi_port = 127.0.0.1:5000
 encoding_list = UTF-8
 min_peers_seed = 10
 max_peers_seed = 50
 max_uploads = 14
 download_rate = 0
-upload_rate = 50
+upload_rate = 80
 directory = <DATA_DIR>/downloads
 session = <SITE_DIR>/session
 system.method.set_key = event.download.finished,move_complete,"execute=mv,-n,$d.get_base_path=,<DATA_DIR>/media/;d.set_directory,<DATA_DIR>/media/"
