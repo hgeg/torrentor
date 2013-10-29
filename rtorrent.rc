@@ -11,7 +11,7 @@ upload_rate = 80
 directory = <DATA_DIR>/downloads
 session = <SITE_DIR>/session
 system.method.set_key = event.download.finished,move_complete,"execute=mv,-n,$d.get_base_path=,<DATA_DIR>/media/;d.set_directory,<DATA_DIR>/media/;execute=<SITE_DIR>/scripts/action.py,--remove,$d.get_name="
-system.method.set_key = event.download.opened,add_torrent,"excecute=<SITE_DIR>/scripts/action.py,--add,$d.get_name="
+system.method.set_key = event.download.opened,add_torrent,"execute=<SITE_DIR>/scripts/action.py,--add,$d.get_name="
 schedule = watch_directory,5,5,load_start=<SITE_DIR>/torrents/*.torrent
 schedule = low_diskspace,5,60,close_low_diskspace=100M
 #ip = 127.0.0.1
