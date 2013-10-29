@@ -19,7 +19,7 @@ def add_to_list(filename):
   db = shelve.open("downloads")
   lst = downloads['list']
   lst += [filename]
-  if len(lst)>10
+  if len(lst)>10:
     lst.reverse()
     while len(lst)>10: lst.pop()
     lst.reverse()
