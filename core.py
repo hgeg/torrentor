@@ -57,7 +57,7 @@ class Query:
     return render.index()
   def POST(self):
     query = web.input().query
-    if re.match('(magnet:\?.*|http://.*/.*\.(torrent\?title=.*|torrent))',query):
+    if re.match('(magnet:\?.*|http(s|)://.*/.*\.(torrent\?title=.*|torrent))',query):
       timestamp = int(time.time())
       with open('%s/tfile_%d.torrent'%(settings.TORRENTS_DIR,timestamp),'wb') as f:  
         f.write(requests.get(query,stream=True).content)
@@ -82,7 +82,12 @@ class List:
     return render.index()
 
 class JSON:
-  def GET(self,call): pass
+  def GET(self,call): 
+    if call == 'status':
+      db = shelve.open('downloads')
+      retval = json.dumps({'list': db['list']})
+      db.close()
+      return retval
   def POST(self,call):
     web.header('Content-Type', 'application/json')
     post = json.loads(web.data())
@@ -94,12 +99,7 @@ class JSON:
     if call == 'playHDMI':
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       runCommand(["screen", "-dmS", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
-      return('Playing...')
-    if call == 'status':
-      db = shelve.open('/scripts/downloads.db')
-      retval = json.dumps({'list': data[list]})
-      db.close()
-      return retval
+      return('{"error":false,"status":"playing"}')
 
 
 if __name__ == '__main__':
