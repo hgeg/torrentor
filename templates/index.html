@@ -24,7 +24,7 @@
     <!-- Side Menu -->
     <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle"><i class="icon-reorder"></i></a>
     <div id="sidebar-wrapper">
-      <ul class="sidebar-nav">
+      <ul id="downloads" class="sidebar-nav">
         <a id="menu-close" href="#" class="btn btn-default btn-md pull-right toggle"><i class="icon-remove"></i></a>
         <li class="sidebar-brand white">
           <br>
@@ -112,6 +112,11 @@
   <script>
       $$("#menu-toggle").click(function(e) {
           e.preventDefault();
+          $$.get("/torrentor/json:status/", function(data) {
+            $$.each(data.list, function(index,value) {
+              $$('#downloads').append(value);
+            });
+          },'json');
           $$("#sidebar-wrapper").toggleClass("active");
       });
   </script>

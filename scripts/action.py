@@ -2,25 +2,32 @@
 # -*- conding: utf-8 -*-
 import sys,shelve
 
+def init_list():
+  db = shelve.open("downloads")
+  db['list'] = []
+  db.close()
+
 def remove_form_list(filename):
-  downloads = shelve.open("downloads")
+  db = shelve.open("downloads")
   lst = downloads['list']
   if filename in lst: lst.remove(filename)
-  downloads.close()
+  db.close()
 
 def add_to_list(filename):
-  downloads = shelve.open("downloads")
+  db = shelve.open("downloads")
   lst = downloads['list']
   lst.append(filename)
   lst.reverse()
   while len(lst)>10: lst.pop()
   lst.reverse()
-  downloads.close()
+  db.close()
 
 if __name__ == '__main__':
   if sys.argv[1] == '--add':
     add_to_list(sys.argv[2])
-  elif sys.argv[2] == '--remove':
+  elif sys.argv[1] == '--remove':
     remove_form_list(sys.argv[2])
+  elif sys.argv[1] == '--init':
+    init_list()
   return 0
   

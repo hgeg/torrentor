@@ -4,7 +4,7 @@ from __future__ import with_statement
 from subprocess import call as runCommand
 #from twatch import *
 import web,requests,json,redis,re,time,urllib
-import os,sys,socket,fcntl,struct
+import os,sys,socket,fcntl,struct,shelve
 import settings
 
 #Methods to get interface data
@@ -95,6 +95,12 @@ class JSON:
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       runCommand(["screen", "-dmS", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       return('Playing...')
+    if call == 'status':
+      db = shelve.open('/scripts/downloads')
+      retval = json.dumps({'list': data[list]}
+      db.close()
+      return retval
+
 
 if __name__ == '__main__':
   sys.argv.append("%s:8092"%get_lan_ip())
