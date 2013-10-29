@@ -96,8 +96,8 @@ class JSON:
       runCommand(["screen", "-dmS", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       return('Playing...')
     if call == 'status':
-      db = shelve.open('/scripts/downloads')
-      retval = json.dumps({'list': data[list]}
+      db = shelve.open('/scripts/downloads.db')
+      retval = json.dumps({'list': data[list]})
       db.close()
       return retval
 

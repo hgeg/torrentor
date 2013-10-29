@@ -3,18 +3,18 @@
 import sys,shelve
 
 def init_list():
-  db = shelve.open("downloads")
+  db = shelve.open("downloads.db")
   db['list'] = []
   db.close()
 
 def remove_form_list(filename):
-  db = shelve.open("downloads")
+  db = shelve.open("downloads.db")
   lst = downloads['list']
   if filename in lst: lst.remove(filename)
   db.close()
 
 def add_to_list(filename):
-  db = shelve.open("downloads")
+  db = shelve.open("downloads.db")
   lst = downloads['list']
   lst.append(filename)
   lst.reverse()
