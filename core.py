@@ -2,6 +2,7 @@
 # -*- coding utf-8 -*-
 from __future__ import with_statement
 from subprocess import call as runCommand
+from subprocess import check_output as cout
 #from twatch import *
 import web,requests,json,redis,re,time,urllib
 import os,sys,socket,fcntl,struct,shelve
@@ -84,9 +85,7 @@ class List:
 class JSON:
   def GET(self,call): 
     if call == 'status':
-      db = shelve.open('downloads')
-      retval = json.dumps({'list': db['list']})
-      db.close()
+      retval = cout(["%s/scripts/action.py"%settings.SITE_DIR,"--list"])[:-1]
       return retval
   def POST(self,call):
     web.header('Content-Type', 'application/json')
