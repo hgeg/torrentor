@@ -27,15 +27,40 @@ $def with (query,files,indexing)
     <div id="sidebar-wrapper">
       <ul class="sidebar-nav">
         <a id="menu-close" href="#" class="btn btn-default btn-md pull-right toggle"><i class="icon-remove"></i></a>
-        <li class="sidebar-brand white">Downloading:</li>
-        <li class="smaller white">
-          Breaking.Bad.s04.e12.AXXLE.x264.mp4
+        <li class="sidebar-brand white">
+          Control Panel
+        </li>
+        <li id="nowplaying" class="white">
+          <h5>Now Playing:</h5>
+          <div class="row">
+            <div class="col-md-12"><span id="moviename" style="font-size:10px;font-weight:normal;"></span></div>
+          </div>
+          <div class="row text-center">
+            <button class="btn" onclick="control('back')"><span class="icon-fast-backward"></span></button>
+            <button class="btn" onclick="control('play')"><span class="icon-play"></span></button>
+            <button class="btn" onclick="control('stop')"><span class="icon-stop"></span></button>
+            <button class="btn" onclick="control('next')"><span class="icon-fast-forward"></span></button>
+          </div>
+          <script type="text/javascript">
+            function control(directive) {
+              $$.post('/torrentor/json:control/','{"directive":"'+directive+'"}',null,"json")
+            }
+          </script>
+        </li>
+        <br>
+        <li class="white">
+          <h5>Current Downloads:</h5>
+        </li>
+        <li class="white" id="downloads">
+        
+        </li>
+          <!--
           <div class="progress">
             <div class="progress-bar progress-bar-sm" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
               <span class="sr-only">60% Complete</span>
             </div>
           </div>
-        </li>
+          -->
       </ul>
     </div>
     <!-- /Side Menu -->
@@ -143,12 +168,40 @@ $def with (query,files,indexing)
           $$("#sidebar-wrapper").toggleClass("active");
       });
 
+      var state = false;
+      var interval = null;
       $$("#menu-toggle").click(function(e) {
           e.preventDefault();
+          poll();
+          if(!state) {
+            interval = window.setInterval('poll();',20000);
+          } else {
+            window.clearInterval(interval);
+          }
+          state = !state;
           $$("#sidebar-wrapper").toggleClass("active");
       });
 
+      function poll() {
+          console.log('polling...');
+          $$.get("/torrentor/json:status/", function(data) {
+            $$('#downloads').empty()
+            if(data.now_playing == '') {
+                $$('#nowplaying').hide()
+            } else {
+                document.getElementById('moviename').innerText = data.now_playing
+            }
+            $$.each(data.list, function(index,value) {
+              console.log(index)
+              $$('#downloads').append(
+              '<p class="smaller" style="line-height:1.5em;margin:0px 2px 0px 5px;">'+value+'</p><br/>\n'
+              );
+            });
+          },'json');
+      }
+
     $$(document).ready(function() {
+      poll();
       $$("body").css("display", "none");
       $$("body").fadeIn(1000);
     });

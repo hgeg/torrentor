@@ -9,9 +9,9 @@ mkdir <SITE_DIR>/session
 mkdir <SITE_DIR>/torrents
 ln -s <DATA_DIR>/media static/media
 echo "kill previous processes"
+ps ax | grep redis-server | cut -c 1-5 | sudo xargs kill
 ps ax | grep rtorrent | cut -c 1-5 | sudo xargs kill
 ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
-ps ax | grep redis-server | cut -c 1-5 | sudo xargs kill
 echo "running redis"
 screen -S redis  -d -m redis-server
 echo "running rtorrent"

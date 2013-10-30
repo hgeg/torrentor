@@ -86,7 +86,9 @@ class List:
 class JSON:
   def GET(self,call): 
     if call == 'status':
-      omxcount = int(cout(["pgrep","-f","omxplayer","-c"]))
+      try:
+        omxcount = int(cout(["pgrep","-f","omxplayer","-c"]))
+      except: omxcount = 0
       if omxcount==0: 
         runCommand(["%s/scripts/action.py"%settings.SITE_DIR,"--stop"])
       retval = cout(["%s/scripts/action.py"%settings.SITE_DIR,"--list"])
@@ -100,7 +102,6 @@ class JSON:
       if(found): return '[{"name":"%s","seeders":0,"leechers":0,"torrent":""}]'%found[0]
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
     if call == 'playHDMI':
-      db.close()
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       runCommand(["%s/scripts/action.py"%settings.SITE_DIR,"--play",post['path'].split('/')[-1]])

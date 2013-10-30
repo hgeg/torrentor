@@ -48,7 +48,7 @@ def add_to_list(filename):
   return 0
 
 def show_list():
-  retval = json.dumps({'list':db.get('list'),'now_playing':db.get('now_playing')})
+  retval = json.dumps({'list':json.loads(db.get('list')),'now_playing':db.get('now_playing')})
   return retval
 
 if __name__ == '__main__':

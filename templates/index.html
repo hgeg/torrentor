@@ -29,10 +29,10 @@
         <li class="sidebar-brand white">
           Control Panel
         </li>
-        <li class="white">
+        <li id="nowplaying" class="white">
           <h5>Now Playing:</h5>
           <div class="row">
-            <div class="col-md-6"><span style="font-size:10px;font-weight:normal;">Breaking.Bad.S05E15.HDTV.Xvid.x264.mp4</span></div>
+            <div class="col-md-12"><span id="moviename" style="font-size:10px;font-weight:normal;"></span></div>
           </div>
           <div class="row text-center">
             <button class="btn" onclick="control('back')"><span class="icon-fast-backward"></span></button>
@@ -46,6 +46,7 @@
             }
           </script>
         </li>
+        <br>
         <li class="white">
           <h5>Current Downloads:</h5>
         </li>
@@ -120,10 +121,29 @@
       });
   </script>
   <script>
+      var state = false;
+      var interval = null;
       $$("#menu-toggle").click(function(e) {
           e.preventDefault();
+          poll();
+          if(!state) {
+            interval = window.setInterval('poll();',20000);
+          } else {
+            window.clearInterval(interval);
+          }
+          state = !state;
+          $$("#sidebar-wrapper").toggleClass("active");
+      });
+
+      function poll() {
+          console.log('polling...');
           $$.get("/torrentor/json:status/", function(data) {
             $$('#downloads').empty()
+            if(data.now_playing == '') {
+                $$('#nowplaying').hide()
+            } else {
+                document.getElementById('moviename').innerText = data.now_playing
+            }
             $$.each(data.list, function(index,value) {
               console.log(index)
               $$('#downloads').append(
@@ -131,12 +151,12 @@
               );
             });
           },'json');
-          $$("#sidebar-wrapper").toggleClass("active");
-      });
+      }
   </script>
 
   <script type="text/javascript">
     $$(document).ready(function() {
+      poll();
       $$("body").css("display", "none");
       $$("body").fadeIn(1000);
       setInterval("search(input);keys=false;",800);
