@@ -102,7 +102,7 @@ class JSON:
       return('{"error":false,"status":"playing"}')
     if call == 'control':
       keymap = {'back':'\c[[B', 'play':'p', 'stop':'q', 'next':'\c[[A'}
-      runCommand(["screen", "-S", "omx", "-X", "stuff", keymap[post['directive']])
+      runCommand(["screen", "-S", "omx", "-X", "stuff", keymap[post['directive']]])
 
 
 
