@@ -1,6 +1,6 @@
 echo "      Welcome to Torrentor.v2 installer      "
 echo "---------------------------------------------"
-echo "Trying to install prerequisites"
+echo "Trying to install dependencies..."
 echo ""
 
 ./install_prereq.sh

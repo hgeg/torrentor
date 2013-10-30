@@ -1,5 +1,5 @@
-echo "rtorrent, pip, screen:"
-sudo apt-get install rtorrent python-pip screen omxplayer
+echo "rtorrent, pip, screen, redis, omxplayer:"
+sudo apt-get install rtorrent python-pip screen omxplayer redis
 echo "python/web.py:"
 sudo pip install web.py
 echo "python/redis:"
