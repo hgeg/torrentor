@@ -3,6 +3,7 @@
 from __future__ import with_statement
 from subprocess import call as runCommand
 from subprocess import check_output as cout
+from subprocess import Popen as popen
 #from twatch import *
 import web,requests,json,redis,re,time,urllib
 import os,sys,socket,fcntl,struct,shelve
@@ -97,7 +98,7 @@ class JSON:
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
     if call == 'playHDMI':
       runCommand(["screen", "-S", "omx", "-X", "quit"])
-      runCommand(["screen", "-dmS", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
+      popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       return('{"error":false,"status":"playing"}')
 
 
