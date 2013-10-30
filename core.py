@@ -100,6 +100,10 @@ class JSON:
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       return('{"error":false,"status":"playing"}')
+    if call == 'control':
+      keymap = {'back':'\c[[B', 'play':'p', 'stop':'q', 'next':'\c[[A'}
+      runCommand(["screen", "-S", "omx", "-X", "stuff", keymap[post['directive']])
+
 
 
 if __name__ == '__main__':

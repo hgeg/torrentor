@@ -29,18 +29,22 @@
         <li class="sidebar-brand white">
           Control Panel
         </li>
-        <li class="smaller white">
+        <li class="white">
           <h5>Now Playing:</h5>
           <div class="row">
             <div class="col-md-6"><span style="font-size:10px;font-weight:normal;">Breaking.Bad.S05E15.HDTV.Xvid.x264.mp4</span></div>
           </div>
           <div class="row text-center">
-            <div class="col-xs-1 col-md-1"><span class="icon-fast-backward"></span></div>
-            <div class="col-xs-1 col-md-1"><span class="icon-step-backward"></span></div>
-            <div class="col-xs-1 col-md-1"><span class="icon-play"></span></div>
-            <div class="col-xs-1 col-md-1"><span class="icon-step-forward"></span></div>
-            <div class="col-xs-1 col-md-1"><span class="icon-fast-forward"></span></div>
+            <button class="btn" onclick="control('back')"><span class="icon-fast-backward"></span></button>
+            <button class="btn" onclick="control('play')"><span class="icon-play"></span></button>
+            <button class="btn" onclick="control('stop')"><span class="icon-stop"></span></button>
+            <button class="btn" onclick="control('next')"><span class="icon-fast-forward"></span></button>
           </div>
+          <script type="text/javascript">
+            function control(directive) {
+              $$.post('/torrentor/json:control/',{'directive':directive},null,"json")
+            }
+          </script>
         </li>
         <li class="white">
           <h5>Recent Downloads:</h5>
