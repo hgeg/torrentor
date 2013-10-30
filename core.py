@@ -86,7 +86,10 @@ class List:
 class JSON:
   def GET(self,call): 
     if call == 'status':
-      retval = cout(["%s/scripts/action.py"%settings.SITE_DIR,"--list"])[:-1]
+      omxcount = int(cout(["pgrep","-f","omxplayer","-c"]))
+      if omxcount==0: 
+        runCommand(["%s/scripts/action.py"%settings.SITE_DIR,"--stop"])
+      retval = cout(["%s/scripts/action.py"%settings.SITE_DIR,"--list"])
       return retval
   def POST(self,call):
     web.header('Content-Type', 'application/json')
@@ -97,13 +100,14 @@ class JSON:
       if(found): return '[{"name":"%s","seeders":0,"leechers":0,"torrent":""}]'%found[0]
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
     if call == 'playHDMI':
+      db.close()
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
+      runCommand(["%s/scripts/action.py"%settings.SITE_DIR,"--play",post['path'].split('/')[-1]])
       return('{"error":false,"status":"playing"}')
     if call == 'control':
       keymap = {'back':'\c[[B', 'play':'p', 'stop':'q', 'next':'\c[[A'}
       runCommand(["screen", "-S", "omx", "-X", "stuff", keymap[post['directive']]])
-
 
 
 if __name__ == '__main__':

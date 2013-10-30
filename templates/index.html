@@ -42,12 +42,12 @@
           </div>
           <script type="text/javascript">
             function control(directive) {
-              $$.post('/torrentor/json:control/',{'directive':directive},null,"json")
+              $$.post('/torrentor/json:control/','{"directive":"'+directive+'"}',null,"json")
             }
           </script>
         </li>
         <li class="white">
-          <h5>Recent Downloads:</h5>
+          <h5>Current Downloads:</h5>
         </li>
         <li class="white" id="downloads">
         

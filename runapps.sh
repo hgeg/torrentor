@@ -8,12 +8,15 @@ mkdir <DATA_DIR>/media
 mkdir <SITE_DIR>/session
 mkdir <SITE_DIR>/torrents
 ln -s <DATA_DIR>/media static/media
-echo "initialize data"
-scripts/action.py --init 
 echo "kill previous processes"
 ps ax | grep rtorrent | cut -c 1-5 | sudo xargs kill
 ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
+ps ax | grep redis-server | cut -c 1-5 | sudo xargs kill
+echo "running redis"
+screen -S redis  -d -m redis-server
 echo "running rtorrent"
 screen -S rtorrent  -d -m rtorrent
 echo "running web layer"
 sudo screen -S torrentor  -d -m ./core.py 
+echo "initialize data"
+scripts/action.py --init 
