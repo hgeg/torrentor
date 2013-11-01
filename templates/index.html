@@ -145,7 +145,6 @@
                 document.getElementById('moviename').innerText = data.now_playing
             }
             $$.each(data.list, function(index,value) {
-              console.log(index)
               $$('#downloads').append(
               '<p class="smaller" style="line-height:1.5em;margin:0px 2px 0px 5px;">'+value+'</p><br/>\n'
               );
