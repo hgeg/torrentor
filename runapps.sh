@@ -23,10 +23,11 @@ screen -S rtorrent  -d -m rtorrent
 echo "running web layer"
 sudo screen -S torrentor  -d -m ./core.py 
 echo "running nginx" 
-if [ -f torrentor.conf]
+if [ -f torrentor.conf ]
 then                                                                                                                                                                             
   echo "setting up scgi upstream"
-  sudo mv torretor.conf /etc/nginx/sites-enabled/torrentor.conf
+  sudo rm /etc/nginx/sites-enabled/default
+  sudo mv torrentor.conf /etc/nginx/sites-enabled/torrentor.conf
   sudo service nginx restart
 fi
 echo "initialize data"

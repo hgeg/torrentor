@@ -67,7 +67,7 @@ class Query:
     else:
       if query == '': return web.redirect('/torrentor/l/')
       path = settings.MEDIA_DIR
-      files = sorted([(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path) if query.lower() in e.lower()], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+      files = sorted([(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path) if query.lower() in e.lower()], key=lambda e:os.path.getctime(path+'/'+e[0]), reverse=True)
       return render.list(query,files,False)
 
 class List:

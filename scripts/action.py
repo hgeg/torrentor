@@ -32,7 +32,7 @@ def add_to_list(filename):
 
 def show_list():
   conn = xmlrpclib.ServerProxy('http://localhost/scgi')
-  trs = [{'name':conn.d.get_base_filename(t),'drate':conn.d.get_down_rate(t),'done':conn.d.get_bytes_done(t),'total':conn.d.get_size_bytes(t)} for t in conn.download_list()]
+  trs = [{'name':conn.d.get_base_filename(t)[:30] + '...' if len(conn.d.get_base_filename(t))>32 else '','drate':conn.d.get_down_rate(t),'done':conn.d.get_bytes_done(t),'total':conn.d.get_size_bytes(t)} for t in conn.download_list()]
   retval = json.dumps({'list':trs,'now_playing':db.get('now_playing')})
   return retval
 

@@ -23,7 +23,7 @@
 
     <!-- Side Menu -->
     <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle"><i class="icon-reorder"></i></a>
-    <div id="sidebar-wrapper">
+    <div id="sidebar-wrapper" style="overflow:hidden">
       <ul class="sidebar-nav">
         <a id="menu-close" href="#" class="btn btn-default btn-md pull-right toggle"><i class="icon-remove"></i></a>
         <li class="sidebar-brand white">
@@ -35,10 +35,10 @@
             <div class="col-md-12"><span id="moviename" style="font-size:10px;font-weight:normal;"></span></div>
           </div>
           <div class="row text-center">
-            <button class="btn" onclick="control('back')"><span class="icon-fast-backward"></span></button>
-            <button class="btn" onclick="control('play')"><span class="icon-play"></span></button>
-            <button class="btn" onclick="control('stop')"><span class="icon-stop"></span></button>
-            <button class="btn" onclick="control('next')"><span class="icon-fast-forward"></span></button>
+            <button class="btn" style="background-color:#fff" onclick="control('back')"><span class="icon-fast-backward"></span></button>
+            <button class="btn" style="background-color:#fff" onclick="control('play')"><span class="icon-play"></span></button>
+            <button class="btn" style="background-color:#fff" onclick="control('stop')"><span class="icon-stop"></span></button>
+            <button class="btn" style="background-color:#fff" onclick="control('next')"><span class="icon-fast-forward"></span></button>
           </div>
           <script type="text/javascript">
             function control(directive) {
@@ -127,7 +127,7 @@
           e.preventDefault();
           poll();
           if(!state) {
-            interval = window.setInterval('poll();',20000);
+            interval = window.setInterval('poll();',2000);
           } else {
             window.clearInterval(interval);
           }
@@ -144,9 +144,12 @@
             } else {
                 document.getElementById('moviename').innerText = data.now_playing
             }
-            $$.each(data.list, function(index,value) {
+            $$.each(data.list, function(index,object) {
+              drate = object.drate/1024.0;
+              percent = object.done*1.0/object.total*100;
               $$('#downloads').append(
-              '<p class="smaller" style="line-height:1.5em;margin:0px 2px 0px 5px;">'+value+'</p><br/>\n'
+              '<br style="line-height:5px;"><p class="smaller" style="line-height:1.5em;margin:0px 2px 0px 5px;">'+object.name+'</p><p class="smaller" style="line-height:1.5em;margin:0px 2px 0px 5px;">'+Math.round(drate*100)/100+' KB/s, ' +
+              Math.round(percent*100)/100+ '% downloaded.</p>'
               );
             });
           },'json');
