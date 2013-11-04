@@ -76,7 +76,10 @@ class List:
     if path == '': path = '/'
     if not path[-1] == '/': path = "%s/"%path 
     if(os.path.isdir(abs_path)):
-      files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path)], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+      if path=='/':
+        files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path)], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+      else:
+        files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path)]
       return render.list(path,files,True)
     else:
       return render.media(path.split('/')[-1],path)
