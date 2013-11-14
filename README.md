@@ -4,7 +4,7 @@ Torrentor.v2
 1. Description 
 --------------
 
-Torrentor.v2 is the lightweight, easily installed, and optimized version of classic torrentor. It has a minimal and brand new interface. This version's focus is handling media files. It is designed to play movies and tv shows downloaded via torrent.
+Torrentor.v2 is the lightweight, easy to install, and optimized version of classic torrentor, featuring brand new minimalistic interface. This version's focus is handling media files. It is designed to play movies and tv shows downloaded via torrent.
 
 2. Installation
 ---------------
@@ -20,19 +20,27 @@ Torrentor.v2 is the lightweight, easily installed, and optimized version of clas
 
 3. How to use
 -------------
-When you first enter the web interface, you will see something like this:
+Access to torrentor via url ```http://<your pi's local ip>:8092/torrentor``` from any device, this link will be provided at the end of installation process. On the web interface, you will see something like this:
+
 ![alt text](http://hgeg.io/misc/mainpage.png "Main Page")
 
-You can add new torrents, search for media, and see the progress of your downloads.
-####Shaded areas are:
+You can add new torrents, search for media, and see the progress of your downloads by:
 
-1. Progress Toggle: It opens a panel that shows your current downloads.
+1. Progress Toggle: It opens a panel that shows your current downloads and "now playing" information
 2. Omnibox: This is how you control the torrentor. With, omnibox you can:
     * Add new torrents by directly pasting the link (torrent or magnet)
-    * Search for media in your downloads location.
+    * Search for media in your downloads location. Therefore, a blank search (simply pressing return key) will list your whole library.
     * If above search returns no results, omnibox understands it and suggests the best matching torrent file in the internet as you type.
 
 4. Issues
 ---------
 
-Torrentor.v2 is quite new and naturally has some bugs & issues. Also file conversion is not added yet. For any bugs reports and/or suggestions please send an email to [me](mailto:alicanblbl@gmail.com).
+Torrentor.v2 is quite new and naturally has some bugs & issues. Here are some of the known bugs and issues:
+
+* Progress panel is quite buggy, finished downloads are not removed, and there are several design issues.
+* Browser playback does not work on mobile devices.
+* No support for displaying files other than video. (e.g. audio, text and images)
+* File conversion is not added yet. 
+* Needs subtitle support.
+
+For the bugs you fount other than those, send your reports and/or to [me](mailto:alicanblbl@gmail.com).
