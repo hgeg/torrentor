@@ -37,7 +37,7 @@ You can add new torrents, search for media, and see the progress of your downloa
 
 Torrentor.v2 is quite new and naturally has some bugs & issues. Here are some of the known bugs and issues:
 
-* Progress panel is quite buggy, finished downloads are not removed, and there are several design issues.
+* There are several design issues on progress panel.
 * Browser playback does not work on mobile devices.
 * No support for displaying files other than video. (e.g. audio, text and images)
 * File conversion is not added yet. 
