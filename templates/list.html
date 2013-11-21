@@ -163,6 +163,11 @@ $def with (query,files,indexing)
 
   <!-- Custom JavaScript for the Side Menu - Put in a custom JS file if you want to clean this up -->
   <script>
+      $$("#menu-close").click(function(e) {
+          e.preventDefault();
+          $$("#sidebar-wrapper").toggleClass("active");
+      });
+      
       var state = false;
       var interval = null;
       $$("#menu-toggle").click(function(e) {
