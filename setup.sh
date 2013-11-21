@@ -1,9 +1,9 @@
+echo ""
 echo "      Welcome to Torrentor.v2 installer      "
 echo "---------------------------------------------"
+
 echo ""
 echo "Installing dependencies..."
-echo ""
-
 ./install_prereq.sh
 
 echo "Finished. Now setting up config files..."
@@ -19,6 +19,7 @@ echo "cleaning up..."
 rm install_prereq.sh 
 rm runapps.sh
 rm config.py
+rm README.md
 rm -- "$0"
 
 echo ""
