@@ -11,7 +11,7 @@ def init_list():
 def play(filename):
   db.set('now_playing',filename)
 
-def stop(filename):
+def stop():
   db.set('now_playing','')
 
 def remove_form_list(filename):
@@ -32,7 +32,7 @@ def add_to_list(filename):
 
 def show_list():
   conn = xmlrpclib.ServerProxy('http://localhost/scgi')
-  trs = [{'name':conn.d.get_base_filename(t)[:30] + '...' if len(conn.d.get_base_filename(t))>32 else '','drate':conn.d.get_down_rate(t),'done':conn.d.get_bytes_done(t),'total':conn.d.get_size_bytes(t)} for t in conn.download_list()]
+  trs = [dl for dl in conn.d.multicall('default','d.get_base_filename=','d.get_down_rate=','d.get_bytes_done=','d.get_size_bytes=') if dl[2]<dl[3]]
   retval = json.dumps({'list':trs,'now_playing':db.get('now_playing')})
   return retval
 

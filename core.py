@@ -8,6 +8,7 @@ from subprocess import Popen as popen
 import web,requests,json,redis,re,time,urllib
 import os,sys,socket,fcntl,struct,shelve
 import settings
+from scripts import action
 
 #Methods to get interface data
 def get_interface_ip(ifname):
@@ -61,8 +62,10 @@ class Query:
     query = web.input().query
     if re.match('(magnet:\?.*|http(s|)://.*/.*\.(torrent\?title=.*|torrent))',query):
       timestamp = int(time.time())
+      req = requests.get(query,stream=True)
       with open('%s/tfile_%d.torrent'%(settings.TORRENTS_DIR,timestamp),'wb') as f:  
-        f.write(requests.get(query,stream=True).content)
+          for chunk in req.iter_content(256):
+            f.write(chunk)
       return web.redirect('/torrentor/')
     else:
       if query == '': return web.redirect('/torrentor/l/')
@@ -93,8 +96,8 @@ class JSON:
         omxcount = int(cout(["pgrep","-f","omxplayer","-c"]))
       except: omxcount = 0
       if omxcount==0: 
-        runCommand(["%s/scripts/action.py"%settings.SITE_DIR,"--stop"])
-      retval = cout(["%s/scripts/action.py"%settings.SITE_DIR,"--list"])
+          action.stop()
+      retval = action.show_list()
       return retval
   def POST(self,call):
     web.header('Content-Type', 'application/json')
@@ -105,6 +108,7 @@ class JSON:
       if(found): return '[{"name":"%s","seeders":0,"leechers":0,"torrent":""}]'%found[0]
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
     if call == 'playHDMI':
+      runCommand('echo "on 0" | cec-client -s',shell=True)
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       runCommand(["%s/scripts/action.py"%settings.SITE_DIR,"--play",post['path'].split('/')[-1]])
@@ -116,6 +120,6 @@ class JSON:
 
 if __name__ == '__main__':
   sys.argv.append("%s:8092"%get_lan_ip())
-  #app.internalerror = web.debugerror
-  #web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+  app.internalerror = web.debugerror
+  web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
   app.run()

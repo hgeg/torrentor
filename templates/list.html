@@ -24,7 +24,7 @@ $def with (query,files,indexing)
 
     <!-- Side Menu -->
     <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle"><i class="icon-reorder"></i></a>
-    <div id="sidebar-wrapper">
+    <div id="sidebar-wrapper" style="overflow:hidden">
       <ul class="sidebar-nav">
         <a id="menu-close" href="#" class="btn btn-default btn-md pull-right toggle"><i class="icon-remove"></i></a>
         <li class="sidebar-brand white">
@@ -178,7 +178,6 @@ $def with (query,files,indexing)
       });
 
       function poll() {
-          console.log('polling...');
           $$.get("/torrentor/json:status/", function(data) {
             $$('#downloads').empty()
             if(data.now_playing == '') {
@@ -187,10 +186,11 @@ $def with (query,files,indexing)
                 document.getElementById('moviename').innerText = data.now_playing
             }
             $$.each(data.list, function(index,object) {
-              drate = object.drate/1024.0;
-              percent = object.done*1.0/object.total*100;
+                name = object[0].length<30 ? object[0] : object[0].substring(0,27)+'...'
+              drate = object[1]/1024.0;
+              percent = object[2]*1.0/object[3]*100;
               $$('#downloads').append(
-              '<br style="line-height:5px;"><p class="smaller" style="line-height:1.5em;margin:0px 2px 0px 5px;">'+object.name+'</p><p class="smaller" style="line-height:1.5em;margin:0px 2px 0px 5px;">'+Math.round(drate*100)/100+' KB/s, ' +
+              '<p class="smaller" style="line-height:1.5em;margin:0px 2px 2px 5px;">'+name+'</p><p class="smaller" style="line-height:1.5em;margin:0px 2px 15px 5px;">'+Math.round(drate*100)/100+' KB/s, ' +
               Math.round(percent*100)/100+ '% downloaded.</p>'
               );
             });
