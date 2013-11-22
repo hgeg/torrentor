@@ -109,9 +109,10 @@ class JSON:
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
     if call == 'playHDMI':
       runCommand('echo "on 0" | cec-client -s',shell=True)
+      runcommand(['periscope','%s/%s'%(settings.MEDIA_DIR,post['path']),'-l','en'])
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
-      runCommand(["%s/scripts/action.py"%settings.SITE_DIR,"--play",post['path'].split('/')[-1]])
+      action.play(post['path'].split('/')[-1])
       return('{"error":false,"status":"playing"}')
     if call == 'control':
       keymap = {'back':'\c[[B', 'play':'p', 'stop':'q', 'next':'\c[[A'}
