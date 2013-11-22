@@ -8,3 +8,5 @@ echo "python/requests:"
 sudo pip install requests
 echo "python/xmlrpclib:"
 sudo pip install xmlrpclib
+echo "python/periscope:"
+sudo pip install periscope

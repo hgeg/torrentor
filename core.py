@@ -109,7 +109,7 @@ class JSON:
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
     if call == 'playHDMI':
       runCommand('echo "on 0" | cec-client -s',shell=True)
-      runcommand(['periscope','%s/%s'%(settings.MEDIA_DIR,post['path']),'-l','en'])
+      runCommand(['periscope','%s/%s'%(settings.MEDIA_DIR,post['path']),'-l','en'])
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       action.play(post['path'].split('/')[-1])
