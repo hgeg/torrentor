@@ -10,3 +10,5 @@ echo "python/xmlrpclib:"
 sudo pip install xmlrpclib
 echo "python/periscope:"
 sudo pip install periscope
+echo "python/bs4"
+sudo pip install BeautifulSoup

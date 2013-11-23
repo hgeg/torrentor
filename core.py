@@ -70,7 +70,7 @@ class Query:
     else:
       if query == '': return web.redirect('/torrentor/l/')
       path = settings.MEDIA_DIR
-      files = sorted([(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path) if query.lower() in e.lower()], key=lambda e:os.path.getctime(path+'/'+e[0]), reverse=True)
+      files = sorted([(e,checktype("%s/%s"%(path,e))) for e in os.listdir(path) if query.lower() in e.decode('utf-8').lower() and e[-3:]!='srt'], key=lambda e:os.path.getctime(path+'/'+e[0]), reverse=True)
       return render.list(query,files,False)
 
 class List:
@@ -80,9 +80,10 @@ class List:
     if not path[-1] == '/': path = "%s/"%path 
     if(os.path.isdir(abs_path)):
       if path=='/':
-        files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path)], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+        files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt', key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+        path = ''
       else:
-        files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path)]
+        files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']
       return render.list(path,files,True)
     else:
       return render.media(path.split('/')[-1],path)
@@ -109,7 +110,7 @@ class JSON:
       else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
     if call == 'playHDMI':
       runCommand('echo "on 0" | cec-client -s',shell=True)
-      runCommand(['periscope','%s/%s'%(settings.MEDIA_DIR,post['path']),'-l','en'])
+      runCommand(['periscope','%s/%s'%(settings.MEDIA_DIR,post['path']),'-l','en','--quiet'])
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       action.play(post['path'].split('/')[-1])
