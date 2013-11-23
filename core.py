@@ -80,7 +80,7 @@ class List:
     if not path[-1] == '/': path = "%s/"%path 
     if(os.path.isdir(abs_path)):
       if path=='/':
-        files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt', key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+        files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt'], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
         path = ''
       else:
         files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']

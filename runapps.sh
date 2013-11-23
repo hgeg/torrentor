@@ -1,9 +1,16 @@
 echo "creating directiories"
-mkdir <DATA_DIR>/downloads
 #media conversion dirs
 #will add later
 #mkdir <DATA_DIR>/converting
 #mkdir <DATA_DIR>/finished
+
+echo "creating media folders"
+if [ -d "<DATA_DIR>/media" ]
+then
+  echo "downloads directory exists."
+else
+  mkdir <DATA_DIR>/downloads
+fi
 
 if [ -d "<DATA_DIR>/media" ]
 then
@@ -12,25 +19,12 @@ else
   mkdir <DATA_DIR>/media
 fi
 
-if [ -d "<DATA_DIR>/session" ]
-then
-  echo "session directory exists."
-else
-  mkdir <SITE_DIR>/session
-fi
+echo "creating temp folders"
+mkdir <SITE_DIR>/session
+mkdir <SITE_DIR>/torrents
 
-if [ -d "<DATA_DIR>/torrents" ]
-then
-  echo "torrents directory exists."
-else
-  mkdir <SITE_DIR>/torrents
-fi
-
-if [ ! -d static/media ]
-then                                                                                                                                                                             
-  echo "linking media folder"
-  ln -s <DATA_DIR>/media static/media
-fi
+echo "linking media folder"
+ln -s <DATA_DIR>/media static/media
 
 echo "kill previous processes"
 ps ax | grep redis-server | cut -c 1-5 | sudo xargs kill
