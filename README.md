@@ -1,6 +1,10 @@
 Torrentor.v2
 ============
 
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/hgeg/torrentor/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
+
 1. Description 
 --------------
 
