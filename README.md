@@ -72,3 +72,7 @@ which is based on [Bootstrap](http://twitter.github.com/bootstrap/).
 [Video.js](http://videojs.com) is a free HTML5 video player created and open-sourced by Steve Heffernan and [Zencoder Inc.](http://zencoder.com)
   
   
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/hgeg/torrentor/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
