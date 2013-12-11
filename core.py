@@ -6,6 +6,7 @@ from subprocess import check_output as cout
 from subprocess import Popen as popen
 #from twatch import *
 import web,requests,json,redis,re,time,urllib
+from web.background import background, backgrounder
 import os,sys,socket,fcntl,struct,shelve
 import settings
 from scripts import action
@@ -25,6 +26,16 @@ def get_lan_ip():
         break
       except IOError: pass
   return ip
+
+#Helper methods
+
+@background
+def downloadTorrent(url):
+  timestamp = int(time.time())
+  req = requests.get(url,stream=True)
+  with open('%s/tfile_%d.torrent'%(settings.TORRENTS_DIR,timestamp),'wb') as f:  
+      for chunk in req.iter_content(256):
+        f.write(chunk)
 
 def checktype(f):
   typ = "file"
@@ -100,14 +111,20 @@ class JSON:
           action.stop()
       retval = action.show_list()
       return retval
+
+  @backgrounder
   def POST(self,call):
     web.header('Content-Type', 'application/json')
     post = json.loads(web.data())
     if call == 'match':
       query = post["query"];
-      found = [e for e in os.listdir(settings.MEDIA_DIR) if query in e.lower()]
-      if(found): return '[{"name":"%s","seeders":0,"leechers":0,"torrent":""}]'%found[0]
-      else: return requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).text
+      if re.match('(magnet:\?.*|http(s|)://.*/.*\.(torrent\?title=.*|torrent))',query):
+        downloadTorrent(query)
+        return '{"status":"downloading"}'
+      else:
+          found = [e for e in os.listdir(settings.MEDIA_DIR) if query in e.lower()]
+          if(found): return '[{"status":"found"}]'%found[0]
+          else: return json.dumps(requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).json()[0].update(status="search"))
     if call == 'playHDMI':
       runCommand('echo "on 0" | cec-client -s',shell=True)
       runCommand(["screen", "-S", "omx", "-X", "quit"])
@@ -118,13 +135,18 @@ class JSON:
       keymap = {'back':'\c[[B', 'play':'p', 'stop':'q', 'next':'\c[[A'}
       runCommand(["screen", "-S", "omx", "-X", "stuff", keymap[post['directive']]])
     if call == 'subtitle':
-      runCommand(['periscope','%s/%s'%(settings.MEDIA_DIR,post['path']),'-l','en','--quiet'])
       try:
         f = open(("%s/%s"%(settings.MEDIA_DIR,post['path']))[:-3]+'srt')
         result = "true"
         f.close()
       except IOError:
-        result = "false"
+        runCommand(['periscope','%s/%s'%(settings.MEDIA_DIR,post['path']),'-l','en','--quiet'])
+        try:
+          f = open(("%s/%s"%(settings.MEDIA_DIR,post['path']))[:-3]+'srt')
+          result = "true"
+          f.close()
+        except IOError:
+          result = "false"
       return '{"result":%s}'%result
 
 

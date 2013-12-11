@@ -36,7 +36,7 @@
           </div>
           <div class="row text-center">
             <button class="btn" style="background-color:#fff" onclick="control('back')"><span class="icon-fast-backward"></span></button>
-            <button class="btn" style="background-color:#fff" onclick="control('play')"><span class="icon-play"></span></button>
+            <button class="btn" style="background-color:#fff" onclick="control('play')"><span id="play" class="icon-play"></span></button>
             <button class="btn" style="background-color:#fff" onclick="control('stop')"><span class="icon-stop"></span></button>
             <button class="btn" style="background-color:#fff" onclick="control('next')"><span class="icon-fast-forward"></span></button>
           </div>
@@ -72,9 +72,12 @@
         <br><br><br>
         <form id="form" method="post" action="/torrentor/q/" onsubmit="return submitForm(this);">
           <div class="input-group">
-            <input type="text" id="OmniField" onkeyup="input=this.value;keys=true;" class="form-control" placeholder="Search for media or add torrents" name="query" autocomplete=off></input>
+            <input type="text" id="OmniField" onkeyup="input=this.value;keys=true;" class="form-control" placeholder="Search for media or add torrents" name="query" autocomplete=off>
             <span class="input-group-btn"> 
-              <button class="btn btn-info" type="submit"><span class="icon-search"></span></button>
+                <button id="OmniButton" class="btn btn-info" type="submit">
+                    <span id="actionIcon" class="icon-search"></span>
+                    <img id="loading" src="/static/img/loading.gif" width="16" height="16" style="display:none;">
+              </button>
             </span>
           </div>
         </form>
@@ -196,19 +199,48 @@
     function search(input){
       if(input.length==0 || !$$('#OmniField').is(":focus")) {
         $$('.panel').animate({ opacity: 0 });
+        $$('#actionIcon').hide(200,function(){  
+          $$('#loading').hide(50,function(){  
+            $$('#actionIcon').removeClass().addClass('icon-th-large')
+            $$('#actionIcon').show(300);
+          });
+        });
       }
       if((input.length<4 || oldinput==input) || keys) return false;
       bufferTime=3
-      console.log('invoked');
       $$.post("/torrentor/json:match/", '{"query":"'+input+'"}',
         function(r) {
         data = r[0];
         console.log(data);
+        if(data.status=='downloading') {
+        $$('#actionIcon').hide(300,function(){  
+            $$('#OmniButton').prop('disabled','disabled');
+            $$('#OmniField').prop('disabled','disabled');
+            $$('#loading').show(300).delay(1000).hide(300,function(){  
+                $$('#actionIcon').removeClass('icon-search').addClass('icon-ok');
+                $$('#actionIcon').show(300);
+                $$('#OmniButton').removeAttr('disabled');
+                $$('#OmniField').removeAttr('disabled');
+                $$('#OmniField').prop('value','');
+            });
+        });
+        } else if(data.status=='found') {
+            $$('#actionIcon').hide(200,function(){  
+              $$('#loading').hide(50,function(){  
+                $$('#actionIcon').removeClass().addClass('icon-search')
+                $$('#actionIcon').show(300);
+              });
+            });
+        } else if(data.status=='search') {
+
+        }
+        /*
         $$('#match').text(data.name);
         torrent = data.torrent;
         $$('#seeder').text(data.seeder);
         $$('#leecher').text(data.leecher);
         $$('.panel').animate({ opacity: 1 });
+        */
       },"json");  
       oldinput = input;
     }
