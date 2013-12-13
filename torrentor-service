@@ -16,24 +16,33 @@ case "$1" in
     screen -S rtorrent  -d -m rtorrent
     echo "running web layer"
     sudo screen -S torrentor  -d -m ./core.py 
+    echo "setting up welcome screen"
+    xset -display :0 s reset
+    DISPLAY=:0 feh -F -X --hide-pointer -x -q --draw-tinted --info "python <SITE_DIR>/ip.py" -C /usr/share/fonts/truetype/ttf-dejavu/ -e DejaVuSans/36 -Z -D 5 -B black <SITE_DIR>/screen.png &
+
     ;; 
   restart|reload|force-reload)
     echo "kill previous processes"
     sudo kill `pgrep -f redis-server`
     sudo kill `pgrep -f rtorrent`
     sudo kill `pgrep -f core.py`
+    sudo kill `pgrep -f feh`
     echo "running redis"
     screen -S redis  -d -m redis-server
     echo "running rtorrent"
     screen -S rtorrent  -d -m rtorrent
     echo "running web layer"
     sudo screen -S torrentor  -d -m ./core.py 
+    echo "setting up welcome screen"
+    xset -display :0 s reset
+    DISPLAY=:0 feh -F -X --hide-pointer -x -q --draw-tinted --info "python <SITE_DIR>/ip.py" -C /usr/share/fonts/truetype/ttf-dejavu/ -e DejaVuSans/36 -Z -D 5 -B black <SITE_DIR>/screen.png &
     ;; 
   stop)
     echo "kill previous processes"
-    ps ax | grep redis-server | cut -c 1-5 | sudo xargs kill
-    ps ax | grep rtorrent | cut -c 1-5 | sudo xargs kill
-    ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
+    sudo kill `pgrep -f redis-server`
+    sudo kill `pgrep -f rtorrent`
+    sudo kill `pgrep -f core.py`
+    sudo kill `pgrep -f feh`
     ;;
 
   *)
