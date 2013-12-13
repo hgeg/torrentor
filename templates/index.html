@@ -221,14 +221,17 @@
               });
             });
         } else if(data.status=='search') {
+            content = "<ul>";
+            for(int i=0;i<data.results.length;i++)
+              content += '<li><span id="match">'+data.results[i].name+'</span> <span id="seeder" class="text-success">'+data.results[i].seeder+'</span>/<span id="leecher" class="text-danger">'+data.results[i].leecher+'</span></li><hr>'
+            content += "</ul>"
             $$('#OmniField').popover('destroy');
             $$('#actionIcon').hide(100,function(){  
               $$('#loading').delay(1000).hide(50,function(){  
                 $$('#actionIcon').removeClass().addClass('icon-arrow-down')
                 $$('#actionIcon').show(100,function(){
                     $$('#actionIcon').css('overflow','visible')
-                    $$('#OmniField').popover({'placement':'bottom','title':'<b>Best Match</b>','content':
-                        '<span id="match">'+data.name+'</span> <span id="seeder" class="text-success">'+data.seeder+'</span>/<span id="leecher" class="text-danger">'+data.leecher+'</span>'
+                    $$('#OmniField').popover({'placement':'bottom','title':'<b>Best Match</b>','content': content
                        ,'html':true}).popover('show');
                     torrent = data.torrent;
                 });

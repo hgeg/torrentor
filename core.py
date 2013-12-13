@@ -123,7 +123,7 @@ class JSON:
           if(found): return '[{"status":"found"}]'
           else: 
             try:
-              data = requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).json()[0]
+              data = {'results':requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=5'%query).json()}
               data.update(status="search")
               return json.dumps(data)
             except: return '{"status":"error"}'
