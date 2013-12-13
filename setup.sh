@@ -18,7 +18,7 @@ echo ""
 echo "Finished. Setting autostart on boot"
 chmod +x torrentor-service
 sudo mv torrentor-service /etc/init.d/torrentor-service
-update-rc.d torrentor-service defaults 100
+sudo update-rc.d torrentor-service defaults 100
 
 
 echo ""

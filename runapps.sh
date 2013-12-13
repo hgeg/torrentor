@@ -51,5 +51,5 @@ scripts/action.py --init
 
 echo "setting up hdmi output"
 xset -display :0 s reset
-DISPLAY=:0 feh -F -X --hide-pointer -x -q --draw-tinted --info "python <SITE_DIR>/ip.py" -C /usr/share/fonts/truetype/ttf-dejavu/ -e DejaVuSans/36 -Z -D 5 -B black <SITE_DIR>/screen.jpg 
+DISPLAY=:0 feh -F -X --hide-pointer -x -q --draw-tinted --info "python <SITE_DIR>/ip.py" -C /usr/share/fonts/truetype/ttf-dejavu/ -e DejaVuSans/36 -Z -D 5 -B black <SITE_DIR>/screen.png
 
