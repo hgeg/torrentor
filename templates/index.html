@@ -222,7 +222,7 @@
             });
         } else if(data.status=='search') {
             content = "<ul>";
-            for(int i=0;i<data.results.length;i++)
+            for(i=0;i<data.results.length;i++)
               content += '<li><span id="match">'+data.results[i].name+'</span> <span id="seeder" class="text-success">'+data.results[i].seeder+'</span>/<span id="leecher" class="text-danger">'+data.results[i].leecher+'</span></li><hr>'
             content += "</ul>"
             $$('#OmniField').popover('destroy');

@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "creating directiories"
 #media conversion dirs
 #will add later

@@ -1,3 +1,4 @@
+#!/bin/bash
 echo ""
 echo "      Welcome to Torrentor.v2 installer      "
 echo "---------------------------------------------"
