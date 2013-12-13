@@ -17,7 +17,7 @@ mv .rtorrent.rc $HOME/.rtorrent.rc
 echo ""
 echo "Finished. Setting autostart on boot"
 chmod +x torrentor-service
-sudo cp run.sh /etc/init.d/torrentor-service
+sudo mv torrentor-service /etc/init.d/torrentor-service
 update-rc.d torrentor-service defaults 100
 
 
