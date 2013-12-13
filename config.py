@@ -4,6 +4,7 @@ import os,sys
 content = ""
 SITE_DIR = sys.argv[1]
 DATA_DIR = sys.argv[2]
+DFT_USER = sys.argv[3]
 
 with open('torrentor.conf','r') as f:
   content = f.read()
@@ -13,7 +14,7 @@ with open('torrentor.conf','w+') as f:
 with open('torrentor-stack','r') as f:
   content = f.read()
 with open('torrentor-stack','w+') as f:
-  f.write(content.replace('<SITE_DIR>',SITE_DIR).replace('<DATA_DIR>',DATA_DIR))
+  f.write(content.replace('<SITE_DIR>',SITE_DIR).replace('<DATA_DIR>',DATA_DIR).replace('<USER>',DFT_USER))
 
 with open('runapps.sh','r') as f:
   content = f.read()

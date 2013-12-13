@@ -26,21 +26,13 @@ mkdir <SITE_DIR>/torrents
 echo "linking media folder"
 ln -s <DATA_DIR>/media static/media
 
-echo "kill previous processes"
-ps ax | grep redis-server | cut -c 1-5 | sudo xargs kill
-ps ax | grep rtorrent | cut -c 1-5 | sudo xargs kill
-ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
+sudo service torrentor-stack stop
+sudo service torrentor-stack start
 
-echo "running redis"
-screen -S redis  -d -m redis-server
-echo "running rtorrent"
-screen -S rtorrent  -d -m rtorrent
-echo "running web layer"
-spawn-fcgi -d <SITE_DIR> -f <SITE_DIR>/core.py -a 127.0.0.1 -p 8092
 echo "running nginx" 
 if [ -f torrentor.conf ]
 then                                                                                                                                                                             
-  echo "setting up scgi upstream"
+  echo "setting up fcgi upstream"
   sudo rm /etc/nginx/sites-enabled/default
   sudo mv torrentor.conf /etc/nginx/sites-enabled/torrentor.conf
   sudo service nginx restart

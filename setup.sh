@@ -11,7 +11,7 @@ echo "Installing dependencies..."
 
 echo ""
 echo "Finished. Now setting up config files..."
-python config.py $1 $2 
+python config.py $1 $2 $3
 mv .rtorrent.rc $HOME/.rtorrent.rc
 
 echo ""
@@ -19,7 +19,6 @@ echo "Finished. Setting autostart on boot"
 chmod +x torrentor-stack
 sudo mv torrentor-stack /etc/init.d/torrentor-stack
 sudo update-rc.d torrentor-stack defaults 100
-
 
 echo ""
 echo "Finished. Running services..."

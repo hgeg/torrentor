@@ -110,22 +110,16 @@
 
   <!-- Custom JavaScript for the Side Menu - Put in a custom JS file if you want to clean this up -->
   <script>
+      var interval = null;
       $$("#menu-close").click(function(e) {
           e.preventDefault();
           $$("#sidebar-wrapper").toggleClass("active");
+          window.clearInterval(interval);
       });
-  </script>
-  <script>
-      var state = false;
-      var interval = null;
       $$("#menu-toggle").click(function(e) {
           e.preventDefault();
           poll();
-          if(!state) {
-            interval = window.setInterval('poll();',2000);
-          } else {
-            window.clearInterval(interval);
-          }
+          interval = window.setInterval('poll();',2000);
           state = !state;
           $$("#sidebar-wrapper").toggleClass("active");
       });
