@@ -28,7 +28,7 @@ case "$1" in
     echo "running rtorrent"
     screen -S rtorrent  -d -m rtorrent
     echo "running web layer"
-    spawn-fcgi -f <SITE_DIR>/core.py -a 127.0.0.1 -p 8092
+    spawn-fcgi -d <SITE_DIR> -f <SITE_DIR>/core.py -a 127.0.0.1 -p 8092
     ;; 
   stop)
     echo "kill previous processes"

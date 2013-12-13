@@ -2,7 +2,7 @@ echo "creating directiories"
 #media conversion dirs
 #will add later
 #mkdir <DATA_DIR>/converting
-#mkdir <DATA_DIR>/finished
+# spawn-fcgimkdir <DATA_DIR>/finished
 
 echo "creating media folders"
 if [ -d "<DATA_DIR>/media" ]
@@ -36,7 +36,7 @@ screen -S redis  -d -m redis-server
 echo "running rtorrent"
 screen -S rtorrent  -d -m rtorrent
 echo "running web layer"
-spawn-fcgi -f ./core.py -a 127.0.0.1 -p 8092
+spawn-fcgi -d <SITE_DIR> -f <SITE_DIR>/core.py -a 127.0.0.1 -p 8092
 echo "running nginx" 
 if [ -f torrentor.conf ]
 then                                                                                                                                                                             
