@@ -192,20 +192,18 @@
     state = ""
 
     function search(input){
+      if(input.length==0 || !($$('#OmniField').is(":focus")) ) {
+        $$('#OmniField').prop('value','');
+      }
       if(input.length==0 || !($$('#OmniField').is(":focus") || $$('#OmniButton').is(":focus")) ) {
         $$('#OmniField').popover('destroy');
         $$('#actionIcon').removeClass().addClass('icon-th-large')
         $$('#actionIcon').css('overflow','visible');
-        $$('#OmniField').prop('value','');
         state = "none"
-        torrent = "";
-        oldinput = "";
-        input = "";
       }
       if((input.length<4 || oldinput==input) || keys) return false;
       bufferTime=3
       $$('#OmniButton').prop('disabled',true);
-      torent = "";
       $$('#actionIcon').hide(50,function(){  
           $$('#loading').show(50);
       });

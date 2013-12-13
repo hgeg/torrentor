@@ -6,7 +6,6 @@ from subprocess import check_output as cout
 from subprocess import Popen as popen
 #from twatch import *
 import web,requests,json,redis,re,time,urllib
-from web.background import background, backgrounder
 import os,sys,socket,fcntl,struct,shelve
 import settings
 from scripts import action
@@ -29,7 +28,6 @@ def get_lan_ip():
 
 #Helper methods
 
-#@background
 def downloadTorrent(url):
   timestamp = int(time.time())
   req = requests.get(url,stream=True)
@@ -112,7 +110,6 @@ class JSON:
       retval = action.show_list()
       return retval
 
-  #@backgrounder
   def POST(self,call):
     web.header('Content-Type', 'application/json')
     post = json.loads(web.data())
