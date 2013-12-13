@@ -192,9 +192,6 @@
     state = ""
 
     function search(input){
-      if(input.length==0 || !($$('#OmniField').is(":focus")) ) {
-        $$('#OmniField').prop('value','');
-      }
       if(input.length==0 || !($$('#OmniField').is(":focus") || $$('#OmniButton').is(":focus")) ) {
         $$('#OmniField').popover('destroy');
         $$('#actionIcon').removeClass().addClass('icon-th-large')
@@ -214,7 +211,7 @@
         state = data.status
         if(data.status=='downloading') {
           $$('#actionIcon').removeClass().addClass('icon-ok');
-          $$('#loading').delay(1000).hide(100,function(){
+          $$('#loading').delay(2000).hide(100,function(){
               $$('#actionIcon').show(100).delay(2000).css('overflow','visible');
               $$('#OmniButton').removeAttr('disabled');
               $$('#OmniField').removeAttr('disabled');
