@@ -8,7 +8,20 @@ echo ""
 
 echo ""
 echo "Installing dependencies..."
-./install_prereq.sh
+echo "rtorrent, pip, screen, redis, omxplayer, nginx, spawn, flup, feh...:"
+sudo apt-get install rtorrent python-pip screen omxplayer redis-server nginx feh spawn-fcgi python-flup
+echo "python/web.py:"
+sudo pip install web.py
+echo "python/redis:"
+sudo pip install redis
+echo "python/requests:"
+sudo pip install requests
+echo "python/xmlrpclib:"
+sudo pip install xmlrpclib
+echo "python/periscope:"
+sudo pip install periscope
+echo "python/bs4"
+sudo pip install BeautifulSoup
 
 echo ""
 echo "Finished. Now setting up config files..."
@@ -27,7 +40,6 @@ echo "Finished. Running services..."
 
 echo ""
 echo "cleaning up..."
-rm install_prereq.sh 
 rm runapps.sh
 rm config.py
 rm README.md
