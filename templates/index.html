@@ -72,23 +72,15 @@
         <br><br><br>
         <form id="form" method="post" action="/torrentor/q/" onsubmit="return submitForm(this);">
           <div class="input-group">
-            <input type="text" id="OmniField" onkeyup="input=this.value;keys=true;" class="form-control" placeholder="Search for media or add torrents" name="query" autocomplete=off>
+            <input type="search" id="OmniField" onkeyup="input=this.value;keys=true;" class="form-control" placeholder="Search for media or add torrents" name="query" autocomplete=off>
             <span class="input-group-btn"> 
-                <button id="OmniButton" class="btn btn-info" type="submit">
-                    <span id="actionIcon" class="icon-search"></span>
-                    <img id="loading" src="/static/img/loading.gif" width="16" height="16" style="display:none;">
+                <button id="OmniButton" class="btn btn-info" style="width:40px;height:34px;" type="submit">
+                    <span id="actionIcon" class="icon-th-large"></span>
+                    <img id="loading" src="/static/img/download.gif" width="16" height="16" style="display:none;">
               </button>
             </span>
           </div>
         </form>
-
-        <div class="panel panel-default" style="opacity:0;">
-          <div class="panel-body">
-            <b>Best Match:</b> <span id="match">Breaking.bad.s03e19.hdtv-lol.x264.mp4</span>
-            <span id="seeder" class="text-success">0</span>/<span id="leecher" class="text-danger">0</span>
-            <button id="dlMatch" class="btn btn-info pull-right formtransition"><span class="icon-download"></span></button>
-          </div>
-        </div>
 
       </div>
     </div>
@@ -164,12 +156,15 @@
       poll();
       $$("body").css("display", "none");
       $$("body").fadeIn(1000);
-      setInterval("search(input);keys=false;",800);
+      $$("#OmniField").focus()
+      setInterval("search(input);keys=false;",400);
     });
 
     function submitForm(form) {
       event.preventDefault();
       $$("body").fadeOut(200, function() {
+        if(torrent!='')
+          $$('#OmniField').val(torrent);
         form.submit();
       });
     }
@@ -185,7 +180,6 @@
     $$(".formtransition").click(function(event){
         event.preventDefault();
         $$("body").fadeOut(300, function(){
-          $$('#OmniField').val(torrent);
           form.submit();
         });      
     });
@@ -197,42 +191,60 @@
     torrent = "";
 
     function search(input){
-      if(input.length==0 || !$$('#OmniField').is(":focus")) {
-        $$('.panel').animate({ opacity: 0 });
-        $$('#actionIcon').hide(200,function(){  
-          $$('#loading').hide(50,function(){  
-            $$('#actionIcon').removeClass().addClass('icon-th-large')
-            $$('#actionIcon').show(300);
-          });
-        });
+      if(input.length==0 || !($$('#OmniField').is(":focus") || $$('#OmniButton').is(":focus")) ) {
+        $$('#OmniField').popover('destroy');
+        $$('#actionIcon').removeClass().addClass('icon-th-large')
+        $$('#actionIcon').css('overflow','visible');
+        $$('#OmniField').prop('value','');
+        torrent = "";
+        oldinput = "";
+        input = "";
       }
       if((input.length<4 || oldinput==input) || keys) return false;
       bufferTime=3
+      $$('#OmniButton').prop('disabled',true);
+      $$('#actionIcon').hide(50,function(){  
+          $$('#loading').show(50);
+      });
       $$.post("/torrentor/json:match/", '{"query":"'+input+'"}',
-        function(r) {
-        data = r[0];
+        function(data) {
+        $$('#OmniButton').removeAttr('disabled');
         console.log(data);
         if(data.status=='downloading') {
-        $$('#actionIcon').hide(300,function(){  
-            $$('#OmniButton').prop('disabled','disabled');
-            $$('#OmniField').prop('disabled','disabled');
-            $$('#loading').show(300).delay(1000).hide(300,function(){  
-                $$('#actionIcon').removeClass('icon-search').addClass('icon-ok');
-                $$('#actionIcon').show(300);
-                $$('#OmniButton').removeAttr('disabled');
-                $$('#OmniField').removeAttr('disabled');
-                $$('#OmniField').prop('value','');
-            });
-        });
+          $$('#actionIcon').removeClass().addClass('icon-ok');
+          $$('#loading').delay(1000).hide(100,function(){
+              $$('#actionIcon').show(100).delay(2000).css('overflow','visible');
+              $$('#OmniButton').removeAttr('disabled');
+              $$('#OmniField').removeAttr('disabled');
+              $$('#OmniField').prop('value','');
+          });
         } else if(data.status=='found') {
-            $$('#actionIcon').hide(200,function(){  
-              $$('#loading').hide(50,function(){  
+            $$('#actionIcon').hide(100,function(){  
+              $$('#loading').delay(1000).hide(50,function(){  
                 $$('#actionIcon').removeClass().addClass('icon-search')
-                $$('#actionIcon').show(300);
+                $$('#actionIcon').show(100,function(){$$('#actionIcon').css('overflow','visible')});
               });
             });
         } else if(data.status=='search') {
-
+            $$('#OmniField').popover('destroy');
+            $$('#actionIcon').hide(100,function(){  
+              $$('#loading').delay(1000).hide(50,function(){  
+                $$('#actionIcon').removeClass().addClass('icon-arrow-down')
+                $$('#actionIcon').show(100,function(){
+                    $$('#actionIcon').css('overflow','visible')
+                    $$('#OmniField').popover({'placement':'bottom','title':'<b>Best Match</b>','content':
+                        '<span id="match">'+data.name+'</span> <span id="seeder" class="text-success">'+data.seeder+'</span>/<span id="leecher" class="text-danger">'+data.leecher+'</span>'
+                       ,'html':true}).popover('show');
+                    torrent = data.torrent;
+                });
+              });
+            });
+        } else {
+          $$('#OmniField').popover('destroy');
+          $$('#loading').hide(50,function(){  
+            $$('#actionIcon').removeClass().addClass('icon-search')
+            $$('#actionIcon').show(100).css('overflow','visible');
+          });
         }
         /*
         $$('#match').text(data.name);

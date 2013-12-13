@@ -1734,17 +1734,13 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .form-control:focus {
-  border-color: #66afe9;
-  outline: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  outline: none;
 }
 
 .form-control[disabled],
 .form-control[readonly],
 fieldset[disabled] .form-control {
   cursor: not-allowed;
-  background-color: #eeeeee;
 }
 
 textarea.form-control {
@@ -2040,9 +2036,7 @@ textarea.input-lg {
 .btn[disabled],
 fieldset[disabled] .btn {
   pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.65;
-  filter: alpha(opacity=65);
+  cursor: default;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -2289,8 +2283,6 @@ fieldset[disabled] .btn-info:active,
 .btn-info.disabled.active,
 .btn-info[disabled].active,
 fieldset[disabled] .btn-info.active {
-  background-color: #5bc0de;
-  border-color: #46b8da;
 }
 
 .btn-link {
@@ -3775,7 +3767,6 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .input-group-btn > .btn {
   position: relative;
   border-radius: 0px;
-  border-color: #333;
 }
 
 .input-group-btn > .btn + .btn {
@@ -5893,14 +5884,14 @@ body.modal-open,
   left: 0;
   z-index: 1010;
   display: none;
-  max-width: 276px;
+  width: 100%;
   padding: 1px;
+  margin-left: 20px;
   text-align: left;
   white-space: normal;
   background-color: #ffffff;
-  border: 1px solid #cccccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
+  border: 0px solid #cccccc;
+  border: 0px solid rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
@@ -5992,7 +5983,7 @@ body.modal-open,
 
 .popover.bottom .arrow {
   top: -11px;
-  left: 50%;
+  right: 10px;
   margin-left: -11px;
   border-bottom-color: #999999;
   border-bottom-color: rgba(0, 0, 0, 0.25);

@@ -29,7 +29,7 @@ def get_lan_ip():
 
 #Helper methods
 
-@background
+#@background
 def downloadTorrent(url):
   timestamp = int(time.time())
   req = requests.get(url,stream=True)
@@ -112,7 +112,7 @@ class JSON:
       retval = action.show_list()
       return retval
 
-  @backgrounder
+  #@backgrounder
   def POST(self,call):
     web.header('Content-Type', 'application/json')
     post = json.loads(web.data())
@@ -123,8 +123,13 @@ class JSON:
         return '{"status":"downloading"}'
       else:
           found = [e for e in os.listdir(settings.MEDIA_DIR) if query in e.lower()]
-          if(found): return '[{"status":"found"}]'%found[0]
-          else: return json.dumps(requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).json()[0].update(status="search"))
+          if(found): return '[{"status":"found"}]'
+          else: 
+            try:
+              data = requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=1'%query).json()[0]
+              data.update(status="search")
+              return json.dumps(data)
+            except: return '{"status":"error"}'
     if call == 'playHDMI':
       runCommand('echo "on 0" | cec-client -s',shell=True)
       runCommand(["screen", "-S", "omx", "-X", "quit"])
