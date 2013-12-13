@@ -15,29 +15,28 @@ case "$1" in
     echo "running rtorrent"
     screen -S rtorrent  -d -m rtorrent
     echo "running web layer"
-    sudo screen -S torrentor  -d -m ./core.py 
+    sudo screen -S torrentor  -d -m <SITE_DIR>/core.py 
     echo "setting up welcome screen"
     ;; 
   restart)
     echo "kill previous processes"
-    sudo kill `pgrep -f redis-server`
-    sudo kill `pgrep -f rtorrent`
-    sudo kill `pgrep -f core.py`
-    sudo kill `pgrep -f feh`
+    ps ax | grep redis-server | cut -c 1-5 | sudo xargs kill
+    ps ax | grep rtorrent | cut -c 1-5 | sudo xargs kill
+    ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
+    ps ax | grep feh | cut -c 1-5 | sudo xargs kill
     echo "running redis"
     screen -S redis  -d -m redis-server
     echo "running rtorrent"
     screen -S rtorrent  -d -m rtorrent
     echo "running web layer"
     sudo screen -S torrentor  -d -m ./core.py 
-    echo "setting up welcome screen"
     ;; 
   stop)
     echo "kill previous processes"
-    sudo kill `pgrep -f redis-server`
-    sudo kill `pgrep -f rtorrent`
-    sudo kill `pgrep -f core.py`
-    sudo kill `pgrep -f feh`
+    ps ax | grep redis-server | cut -c 1-5 | sudo xargs kill
+    ps ax | grep rtorrent | cut -c 1-5 | sudo xargs kill
+    ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
+    ps ax | grep feh | cut -c 1-5 | sudo xargs kill
     ;;
 
   *)
