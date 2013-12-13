@@ -5,6 +5,11 @@ content = ""
 SITE_DIR = sys.argv[1]
 DATA_DIR = sys.argv[2]
 
+with open('torrentor.conf','r') as f:
+  content = f.read()
+with open('torrentor.conf','w+') as f:
+  f.write(content.replace('<SITE_DIR>',SITE_DIR).replace('<DATA_DIR>',DATA_DIR))
+
 with open('torrentor-stack','r') as f:
   content = f.read()
 with open('torrentor-stack','w+') as f:

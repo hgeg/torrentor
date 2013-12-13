@@ -36,7 +36,7 @@ screen -S redis  -d -m redis-server
 echo "running rtorrent"
 screen -S rtorrent  -d -m rtorrent
 echo "running web layer"
-sudo screen -S torrentor  -d -m ./core.py 
+spawn-fcgi -f ./core.py -a 127.0.0.1 -p 8092
 echo "running nginx" 
 if [ -f torrentor.conf ]
 then                                                                                                                                                                             

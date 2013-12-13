@@ -18,4 +18,4 @@ def get_lan_ip():
       except IOError: pass
   return ip
 
-if __name__ == '__main__': sys.stdout.write("http://%s:8092/torrentor"%get_lan_ip())
+if __name__ == '__main__': sys.stdout.write("http://%s/torrentor"%get_lan_ip())

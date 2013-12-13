@@ -15,8 +15,7 @@ case "$1" in
     echo "running rtorrent"
     screen -S rtorrent  -d -m rtorrent
     echo "running web layer"
-    sudo screen -S torrentor  -d -m <SITE_DIR>/core.py 
-    echo "setting up welcome screen"
+    spawn-fcgi -f <SITE_DIR>/core.py -a 127.0.0.1 -p 8092
     ;; 
   restart)
     echo "kill previous processes"
@@ -29,7 +28,7 @@ case "$1" in
     echo "running rtorrent"
     screen -S rtorrent  -d -m rtorrent
     echo "running web layer"
-    sudo screen -S torrentor  -d -m ./core.py 
+    spawn-fcgi -f <SITE_DIR>/core.py -a 127.0.0.1 -p 8092
     ;; 
   stop)
     echo "kill previous processes"

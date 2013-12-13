@@ -154,7 +154,7 @@ class JSON:
 
 
 if __name__ == '__main__':
-  sys.argv.append("%s:8092"%get_lan_ip())
-  #app.internalerror = web.debugerror
-  #web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+  #sys.argv.append("%s:8092"%get_lan_ip())
+  app.internalerror = web.debugerror
+  web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
   app.run()
