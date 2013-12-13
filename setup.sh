@@ -9,7 +9,15 @@ echo ""
 echo ""
 echo "Installing dependencies..."
 echo "rtorrent, pip, screen, redis, omxplayer, nginx, spawn, flup, feh...:"
-sudo apt-get install rtorrent python-pip screen omxplayer redis-server nginx feh spawn-fcgi python-flup
+sudo apt-get install rtorrent
+sudo apt-get install python-pip
+sudo apt-get install screen
+sudo apt-get install omxplayer
+sudo apt-get install redis-server
+sudo apt-get install nginx
+sudo apt-get install feh
+sudo apt-get install spawn-fcgi
+sudo apt-get install python-flup
 echo "python/web.py:"
 sudo pip install web.py
 echo "python/redis:"
