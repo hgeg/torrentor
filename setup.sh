@@ -2,7 +2,7 @@ echo ""
 echo "      Welcome to Torrentor.v2 installer      "
 echo "---------------------------------------------"
 echo "Current version: 2.0.2b"
-echo "Released on 11.12.13"
+echo "Released on 13.12.2013"
 echo ""
 
 echo ""
