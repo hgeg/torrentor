@@ -136,6 +136,7 @@ class JSON:
     if call == 'control':
       keymap = {'back':'\c[[B', 'play':'p', 'stop':'q', 'next':'\c[[A'}
       runCommand(["screen", "-S", "omx", "-X", "stuff", keymap[post['directive']]])
+      runCommand('xset -display :0 s reset',shell=True)
     if call == 'subtitle':
       try:
         f = open(("%s/%s"%(settings.MEDIA_DIR,post['path']))[:-3]+'srt')

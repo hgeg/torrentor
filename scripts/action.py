@@ -33,7 +33,7 @@ def add_to_list(filename):
 def show_list():
   conn = xmlrpclib.ServerProxy('http://localhost/scgi')
   trs = [dl for dl in conn.d.multicall('default','d.get_base_filename=','d.get_down_rate=','d.get_bytes_done=','d.get_size_bytes=') if dl[2]<dl[3]]
-  retval = json.dumps({'list':trs,'now_playing':db.get('now_playing')})
+  retval = json.dumps({'list':trs,'now_playing':db.get('now_playing')[:36]})
   return retval
 
 if __name__ == '__main__':

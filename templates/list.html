@@ -208,7 +208,7 @@ $def with (query,files,indexing)
                 $$('#nowplaying').hide()
             } else {
                 document.getElementById('moviename').innerText = data.now_playing
-                $$('nowplaying').show()
+                $$('#nowplaying').show()
             }
             $$.each(data.list, function(index,object) {
                 name = object[0].length<30 ? object[0] : object[0].substring(0,27)+'...'

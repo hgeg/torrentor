@@ -5,6 +5,11 @@ content = ""
 SITE_DIR = sys.argv[1]
 DATA_DIR = sys.argv[2]
 
+with open('torrentor-service','r') as f:
+  content = f.read()
+with open('torrentor-service','w+') as f:
+  f.write(content.replace('<SITE_DIR>',SITE_DIR).replace('<DATA_DIR>',DATA_DIR))
+
 with open('runapps.sh','r') as f:
   content = f.read()
 with open('runapps.sh','w+') as f:
