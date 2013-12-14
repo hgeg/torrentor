@@ -209,9 +209,11 @@ $def with (query,files,indexing)
                 name = object[0].length<30 ? object[0] : object[0].substring(0,27)+'...'
               drate = object[1]/1024.0;
               percent = object[2]*1.0/object[3]*100;
+              pstate = "pause"
+              if(object[4]=='1') pstate = "play" 
               $$('#downloads').append(
               '<p class="smaller" style="line-height:1.5em;margin:0px 2px 2px 5px;">'+name+'</p><p class="smaller" style="line-height:1.5em;margin:0px 2px 15px 5px;">'+Math.round(drate*100)/100+' KB/s, ' +
-              Math.round(percent*100)/100+ '% downloaded.</p>'
+              Math.round(percent*100)/100+ '% downloaded.<span onclick="$$.get(\'/torrentor/json:toggle/'+object[5]+'\')" class="icon-'+pstate+'"></span></p>'
               );
             });
           },'json');

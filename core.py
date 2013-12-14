@@ -51,7 +51,8 @@ urls = (
   '/torrentor/l/(.*)',      'List',
   '/torrentor/media:(.+)/', 'Media',
   #json views
-  '/torrentor/json:(.+)/',  'JSON'
+  '/torrentor/json:(.+)/',  'JSON',
+  '/torrentor/json:(.+)/(.+)',  'JSON'
 )
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -104,7 +105,7 @@ class List:
     return render.index()
 
 class JSON:
-  def GET(self,call): 
+  def GET(self,call,arg=""): 
     if call == 'status':
       try:
         omxcount = int(cout(["pgrep","-f","omxplayer","-c"]))
@@ -113,6 +114,8 @@ class JSON:
           action.stop()
       retval = action.show_list()
       return retval
+    if call == 'toggle':
+      return action.toggle(arg)
 
   def POST(self,call):
     web.header('Content-Type', 'application/json')
@@ -123,8 +126,8 @@ class JSON:
         downloadTorrent(query)
         return '{"status":"downloading"}'
       else:
-          found = [e for e in os.listdir(settings.MEDIA_DIR) if query in e.lower()]
-          if(found): return '[{"status":"found"}]'
+          found = [e for e in os.listdir(settings.MEDIA_DIR) if query in e]
+          if(found): return '{"status":"found"}'
           else: 
             try:
               data = {'results':requests.get('http://fenopy.se/module/search/api.php?keyword=%s&format=json&limit=5'%query).json()}

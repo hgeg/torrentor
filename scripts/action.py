@@ -32,9 +32,19 @@ def add_to_list(filename):
 
 def show_list():
   conn = xmlrpclib.ServerProxy('http://localhost/scgi')
-  trs = [dl for dl in conn.d.multicall('default','d.get_base_filename=','d.get_down_rate=','d.get_bytes_done=','d.get_size_bytes=') if dl[2]<dl[3]]
+  trs = [dl for dl in conn.d.multicall('default','d.get_base_filename=','d.get_down_rate=','d.get_bytes_done=','d.get_size_bytes=','d.is_active=','d.get_hash=') if dl[2]<dl[3]]
   retval = json.dumps({'list':trs,'now_playing':db.get('now_playing')[:36]})
   return retval
+
+def toggle(hash):
+  conn = xmlrpclib.ServerProxy('http://localhost/scgi')
+  is_active = conn.d.is_active(hash)
+  if(is_active==1):
+      conn.d.pause(hash)
+      return "paused"
+  else: 
+      conn.d.resume(hash)
+      return "playing"
 
 if __name__ == '__main__':
   if sys.argv[1] == '--add':
