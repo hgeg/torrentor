@@ -28,7 +28,6 @@ case "$1" in
     ps ax | grep core.py | cut -c 1-5 | sudo xargs kill
     ps ax | grep feh | cut -c 1-5 | sudo xargs kill
     ;;
-
   *)
   echo "Usage: $0 start|restart|stop" >&2
   exit 3

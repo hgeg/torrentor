@@ -6,7 +6,7 @@ echo "creating directiories"
 # spawn-fcgimkdir <DATA_DIR>/finished
 
 echo "creating media folders"
-if [ -d "<DATA_DIR>/media" ]
+if [ -d "<DATA_DIR>/downloads" ]
 then
   echo "downloads directory exists."
 else

@@ -221,9 +221,10 @@
               });
             });
         } else if(data.status=='search') {
-            content = "<ul>";
+            content = "<ul class=\"menu\">";
             for(i=0;i<data.results.length;i++)
-              content += '<li><span id="match">'+data.results[i].name+'</span> <span id="seeder" class="text-success">'+data.results[i].seeder+'</span>/<span id="leecher" class="text-danger">'+data.results[i].leecher+'</span></li><hr>'
+              result = data.rasults[i];
+              content += '<li><a onclick="$(\'#OmniField\').val(\''+result.torrent+'\');input=\''+result.torrent+'\';"><span id="match">'+result.name+'</span> <span id="seeder" class="text-success">'+result.seeder+'</span>/<span id="leecher" class="text-danger">'+result.leecher+'</span></a></li><hr>'
             content += "</ul>"
             $$('#OmniField').popover('destroy');
             $$('#actionIcon').hide(100,function(){  
@@ -233,7 +234,6 @@
                     $$('#actionIcon').css('overflow','visible')
                     $$('#OmniField').popover({'placement':'bottom','title':'<b>Best Match</b>','content': content
                        ,'html':true}).popover('show');
-                    torrent = data.torrent;
                 });
               });
             });

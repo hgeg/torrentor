@@ -46,12 +46,12 @@ echo ""
 echo "Finished. Running services..."
 ./runapps.sh
 
-#echo ""
-#echo "cleaning up..."
-#rm runapps.sh
-#rm config.py
-#rm README.md
-#rm -- "$0"
+echo ""
+echo "cleaning up..."
+rm runapps.sh
+rm config.py
+rm README.md
+rm -- "$0"
 
 echo ""
 echo "---------------------------------------------"

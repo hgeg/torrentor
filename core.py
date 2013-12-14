@@ -130,7 +130,7 @@ class JSON:
     if call == 'playHDMI':
       runCommand('echo "on 0" | cec-client -s',shell=True)
       runCommand(["screen", "-S", "omx", "-X", "quit"])
-      popen(["screen", "-S", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
+      popen(["screen", "-dmS", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       action.play(post['path'].split('/')[-1])
       return('{"error":false,"status":"playing"}')
     if call == 'control':
