@@ -187,7 +187,7 @@
     state = ""
 
     function search(input){
-      if(input.length==0 || !($('#OmniField').is(":focus") || $$('#OmniButton').is(":focus")) ) {
+      if(input.length==0 || !($('#OmniField').is(":focus") || $('#OmniButton').is(":focus")) ) {
         $('#OmniField').popover('destroy');
         $('#OmniField').val('');
         $('#actionIcon').removeClass().addClass('icon-th-large')
@@ -198,6 +198,7 @@
       if((input.length<4 || oldinput==input) || keys) return false;
       bufferTime=3
       $('#OmniButton').prop('disabled',true);
+      $('#OmniField').popover('destroy');
       $('#actionIcon').hide(50,function(){  
           $('#loading').show(50);
       });
