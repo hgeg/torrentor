@@ -42,7 +42,7 @@
           </div>
           <script type="text/javascript">
             function control(directive) {
-              $$.post('/torrentor/json:control/','{"directive":"'+directive+'"}',null,"json")
+              $.post('/torrentor/json:control/','{"directive":"'+directive+'"}',null,"json")
             }
           </script>
         </li>
@@ -111,33 +111,33 @@
   <!-- Custom JavaScript for the Side Menu - Put in a custom JS file if you want to clean this up -->
   <script>
       var interval = null;
-      $$("#menu-close").click(function(e) {
+      $("#menu-close").click(function(e) {
           e.preventDefault();
-          $$("#sidebar-wrapper").toggleClass("active");
+          $("#sidebar-wrapper").toggleClass("active");
           window.clearInterval(interval);
       });
-      $$("#menu-toggle").click(function(e) {
+      $("#menu-toggle").click(function(e) {
           e.preventDefault();
           poll();
           interval = window.setInterval('poll();',2000);
           state = !state;
-          $$("#sidebar-wrapper").toggleClass("active");
+          $("#sidebar-wrapper").toggleClass("active");
       });
 
       function poll() {
-          $$.get("/torrentor/json:status/", function(data) {
-            $$('#downloads').empty()
+          $.get("/torrentor/json:status/", function(data) {
+            $('#downloads').empty()
             if(data.now_playing == '') {
-                $$('#nowplaying').hide()
+                $('#nowplaying').hide()
             } else {
                 document.getElementById('moviename').innerText = data.now_playing
-                $$('#nowplaying').show()
+                $('#nowplaying').show()
             }
-            $$.each(data.list, function(index,object) {
+            $.each(data.list, function(index,object) {
                 name = object[0].length<30 ? object[0] : object[0].substring(0,27)+'...'
               drate = object[1]/1024.0;
               percent = object[2]*1.0/object[3]*100;
-              $$('#downloads').append(
+              $('#downloads').append(
               '<p class="smaller" style="line-height:1.5em;margin:0px 2px 2px 5px;">'+name+'</p><p class="smaller" style="line-height:1.5em;margin:0px 2px 15px 5px;">'+Math.round(drate*100)/100+' KB/s, ' +
               Math.round(percent*100)/100+ '% downloaded.</p>'
               );
@@ -147,34 +147,34 @@
   </script>
 
   <script type="text/javascript">
-    $$(document).ready(function() {
+    $(document).ready(function() {
       poll();
-      $$("body").css("display", "none");
-      $$("body").fadeIn(1000);
-      $$("#OmniField").focus()
+      $("body").css("display", "none");
+      $("body").fadeIn(1000);
+      $("#OmniField").focus()
       setInterval("search(input);keys=false;",400);
     });
 
     function submitForm(form) {
       event.preventDefault();
-      $$("body").fadeOut(200, function() {
+      $("body").fadeOut(200, function() {
         if(status=="search")
-          $$('#OmniField').val(torrent);
+          $('#OmniField').val(torrent);
         form.submit();
       });
     }
 
-    $$("a.transition").click(function(event){
+    $("a.transition").click(function(event){
         event.preventDefault();
         linkLocation = this.href;
-        $$("body").fadeOut(500, function(){
+        $("body").fadeOut(500, function(){
           window.location = linkLocation;
         });      
     });
 
-    $$(".formtransition").click(function(event){
+    $(".formtransition").click(function(event){
         event.preventDefault();
-        $$("body").fadeOut(300, function(){
+        $("body").fadeOut(300, function(){
           form.submit();
         });      
     });
@@ -187,80 +187,80 @@
     state = ""
 
     function search(input){
-      if(input.length==0 || !($$('#OmniField').is(":focus") || $$('#OmniButton').is(":focus")) ) {
-        $$('#OmniField').popover('destroy');
-        $$('#OmniField').val('');
-        $$('#actionIcon').removeClass().addClass('icon-th-large')
-        $$('#actionIcon').css('overflow','visible');
-        $$('#OmniButton').removeAttr('disabled');
+      if(input.length==0 || !($('#OmniField').is(":focus") || $$('#OmniButton').is(":focus")) ) {
+        $('#OmniField').popover('destroy');
+        $('#OmniField').val('');
+        $('#actionIcon').removeClass().addClass('icon-th-large')
+        $('#actionIcon').css('overflow','visible');
+        $('#OmniButton').removeAttr('disabled');
         state = "none"
       }
       if((input.length<4 || oldinput==input) || keys) return false;
       bufferTime=3
-      $$('#OmniButton').prop('disabled',true);
-      $$('#actionIcon').hide(50,function(){  
-          $$('#loading').show(50);
+      $('#OmniButton').prop('disabled',true);
+      $('#actionIcon').hide(50,function(){  
+          $('#loading').show(50);
       });
-      $$.post("/torrentor/json:match/", '{"query":"'+input+'"}',
+      $.post("/torrentor/json:match/", '{"query":"'+input+'"}',
         function(data) {
-        $$('#OmniButton').removeAttr('disabled');
+        $('#OmniButton').removeAttr('disabled');
         console.log(data);
         state = data.status
         if(data.status=='downloading') {
-          $$('#actionIcon').removeClass().addClass('icon-ok');
-          $$('#loading').delay(2000).hide(100,function(){
-              $$('#actionIcon').show(100).delay(2000).css('overflow','visible');
-              $$('#OmniButton').removeAttr('disabled');
-              $$('#OmniField').removeAttr('disabled');
-              $$('#OmniField').prop('value','');
+          $('#actionIcon').removeClass().addClass('icon-ok');
+          $('#loading').delay(2000).hide(100,function(){
+              $('#actionIcon').show(100).delay(2000).css('overflow','visible');
+              $('#OmniButton').removeAttr('disabled');
+              $('#OmniField').removeAttr('disabled');
+              $('#OmniField').prop('value','');
           });
         } else if(data.status=='found') {
             torent = "";
-            $$('#actionIcon').hide(100,function(){  
-              $$('#loading').delay(1000).hide(50,function(){  
-                $$('#actionIcon').removeClass().addClass('icon-search')
-                $$('#actionIcon').show(100,function(){$$('#actionIcon').css('overflow','visible')});
+            $('#actionIcon').hide(100,function(){  
+              $('#loading').delay(1000).hide(50,function(){  
+                $('#actionIcon').removeClass().addClass('icon-search')
+                $('#actionIcon').show(100,function(){$$('#actionIcon').css('overflow','visible')});
               });
             });
         } else if(data.status=='search') {
             content = '<ul class="menu">';
-            $$('#OmniButton').prop('disabled',true);
+            $('#OmniButton').prop('disabled',true);
             console.log("results:");
             for(i=0;i<data.results.length;i++){
               result = data.results[i];
               console.log(result);
               onclick = 
-              content += '<li class="result" '+"onclick=\"$$('#OmniField').val('"+result.torrent+"');input='"+result.torrent+"';search(input);\""+'><span id="match">'+result.name+'</span> <span id="seeder" class="text-success">'+result.seeder+'</span>/<span id="leecher" class="text-danger">'+result.leecher+'</span></a></li>'
+              content += '<li class="result" '+"onclick=\"$('#OmniField').val('"+result.torrent+"');input='"+result.torrent+"';search(input);\""+'><span id="match">'+result.name+'</span> <span id="seeder" class="text-success">'+result.seeder+'</span>/<span id="leecher" class="text-danger">'+result.leecher+'</span></a></li>'
             }
             content += "</ul>"
-            $$('#OmniField').popover('destroy');
-            $$('#actionIcon').hide(100,function(){  
-              $$('#loading').delay(1000).hide(50,function(){  
-                $$('#actionIcon').removeClass().addClass('icon-arrow-down')
-                $$('#actionIcon').show(100,function(){
-                    $$('#actionIcon').css('overflow','visible')
-                    $$('#OmniField').popover({'placement':'bottom','title':'<b>Search Results:</b>','content': content
+            $('#OmniField').popover('destroy');
+            $('#actionIcon').hide(100,function(){  
+              $('#loading').delay(1000).hide(50,function(){  
+                $('#actionIcon').removeClass().addClass('icon-arrow-down')
+                $('#actionIcon').show(100,function(){
+                    $('#actionIcon').css('overflow','visible')
+                    $('#OmniField').popover({'placement':'bottom','title':'<b>Search Results:</b>','content': content
                        ,'html':true}).popover('show');
                 });
               });
             });
         } else {
           torent = "";
-          $$('#OmniField').popover('destroy');
-          $$('#loading').hide(50,function(){  
-            $$('#actionIcon').removeClass().addClass('icon-warning-sign')
-            $$('#OmniField').popover({'placement':'bottom','content': '<b class="danger">No results found!</b>'
+          $('#OmniField').popover('destroy');
+          $('#loading').hide(50,function(){  
+            $('#actionIcon').removeClass().addClass('icon-warning-sign')
+            $('#OmniField').popover({'placement':'bottom','content': '<b class="danger">No results found!</b>'
                        ,'html':true}).popover('show');
-            $$('#actionIcon').show(100).css('overflow','visible');
-            $$('#OmniButton').prop('disabled',true);
+            $('#actionIcon').show(100).css('overflow','visible');
+            $('#OmniButton').prop('disabled',true);
           });
         }
         /*
-        $$('#match').text(data.name);
+        $('#match').text(data.name);
         torrent = data.torrent;
-        $$('#seeder').text(data.seeder);
-        $$('#leecher').text(data.leecher);
-        $$('.panel').animate({ opacity: 1 });
+        $('#seeder').text(data.seeder);
+        $('#leecher').text(data.leecher);
+        $('.panel').animate({ opacity: 1 });
         */
       },"json");  
       oldinput = input;

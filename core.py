@@ -60,7 +60,11 @@ app = web.application(urls, globals())
 
 class Main:
   def GET(self):
-    return render.index()
+    f = open('%s/templates/index.tfs'%settings.SITE_DIR,'r')
+    data = f.read()
+    f.close()
+    return data
+    #return render.index()
   def POST(self):
     return render.index()
 

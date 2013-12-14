@@ -40,7 +40,7 @@ echo ""
 echo "Finished. Setting autostart on boot"
 chmod +x torrentor-stack
 sudo mv torrentor-stack /etc/init.d/torrentor-stack
-sudo update-rc.d torrentor-stack defaults 100
+sudo update-rc.d torrentor-stack defaults
 
 echo ""
 echo "Finished. Running services..."

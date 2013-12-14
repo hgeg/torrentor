@@ -193,7 +193,6 @@ $def with (query,files,indexing)
           e.preventDefault();
           poll();
           interval = window.setInterval('poll();',2000);
-          state = !state;
           $$("#sidebar-wrapper").toggleClass("active");
       });
 
