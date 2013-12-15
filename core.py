@@ -157,6 +157,19 @@ class JSON:
         except IOError:
           result = "false"
       return '{"result":%s}'%result
+    if call == 'list':
+      abs_path = "%s/%s"%(settings.MEDIA_DIR,path.strip("/"))
+      if(os.path.isdir(abs_path)):
+        if path in '/' :
+          files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt'], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+          path = '/'
+        else:
+          files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']
+        return '{"path":"%s","files":%s,"type":"dir"}'%(path,json.dumps(files))
+      else:
+        return '{"path":"%s", "type":"file"}'%(path)
+
+    return '{"error":true,"type":"InvalidCallError"}'
 
 
 if __name__ == '__main__':
