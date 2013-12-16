@@ -71,7 +71,10 @@ class Main:
 
 class Query:
   def GET(self):
-    return render.index()
+    f = open('%s/templates/list.tfs'%settings.SITE_DIR,'r')
+    data = f.read().decode('utf-8').replace('<PATH>',"/")
+    f.close()
+    return data
   def POST(self):
     query = web.input().query
     if re.match('(magnet:\?.*|http(s|)://.*/.*\.(torrent\?title=.*|torrent))',query):
@@ -89,20 +92,15 @@ class Query:
 
 class List:
   def GET(self,path):
-    abs_path = "%s/%s"%(settings.MEDIA_DIR,path)
-    if path == '': path = '/'
-    if not path[-1] == '/': path = "%s/"%path 
-    if(os.path.isdir(abs_path)):
-      if path=='/':
-        files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt'], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
-        path = ''
-      else:
-        files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']
-      return render.list(path,files,True)
-    else:
-      return render.media(path.split('/')[-1],path)
+    f = open('%s/templates/list.tfs'%settings.SITE_DIR,'r')
+    data = f.read().decode('utf-8').replace('<PATH>',path)
+    f.close()
+    return data
   def POST(self):
-    return render.index()
+    f = open('%s/templates/list.tfs'%settings.SITE_DIR,'r')
+    data = f.read().decode('utf-8').replace('<PATH>',path)
+    f.close()
+    return data
 
 class JSON:
   def GET(self,call,arg=""): 
@@ -158,16 +156,21 @@ class JSON:
           result = "false"
       return '{"result":%s}'%result
     if call == 'list':
+      path = post['path']
       abs_path = "%s/%s"%(settings.MEDIA_DIR,path.strip("/"))
       if(os.path.isdir(abs_path)):
-        if path in '/' :
-          files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt'], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
-          path = '/'
-        else:
-          files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']
-        return '{"path":"%s","files":%s,"type":"dir"}'%(path,json.dumps(files))
+        if(r.get(path)):
+            if path in '/' :
+              files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt'], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+              path = '/' 
+            else:
+              files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']
+            data = '{"path":"%s","files":%s,"type":"dir","indexing":true}'%(path,json.dumps(files))
+            r.set(path,data,86400)
+        else: data = r.get(path)
+        return data
       else:
-        return '{"path":"%s", "type":"file"}'%(path)
+        return '{"path":"%s", "type":"file","indexing":false}'%(path)
 
     return '{"error":true,"type":"InvalidCallError"}'
 

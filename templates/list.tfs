@@ -1,4 +1,3 @@
-$def with (query,files,indexing)
 <!doctype html>
 <html lang="en">
   <head>
@@ -17,10 +16,19 @@ $def with (query,files,indexing)
     <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
     <link rel="icon" type="image/ico" href="/static/img/favicon.ico">
+  
+      <!-- Bootstrap core JavaScript -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="/static/js/jquery.js"></script>
+      <script src="/static/js/bootstrap.js"></script>
+
 
   </head>
 
   <body>
+  <img class="loader" src="/static/img/loading.gif" width=32 height=32>
+
+  <div id="content" style="display:none">
 
     <!-- Side Menu -->
     <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle"><i class="icon-reorder"></i></a>
@@ -69,30 +77,54 @@ $def with (query,files,indexing)
       <div class="container">
         <div class="row">
           <div class="col-md-4 col-md-offset-4 text-center">
-            $if indexing:
-              <h4>Index of "$query"</h4>
-            $else:  
-              <h4>Results for "$query"</h4>
+              <h4>Index of "<PATH>"</h4>
             <hr>
           </div>
         </div>
 
-        <div class="row">
-          $for movie in files
-            <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-              <div class="portfolio-item">
-                $if movie[1] == 'mov':
-                  <a data-toggle="modal" href="#outselect" onclick="passData('$query','$movie[0]','$movie[0][-3:]');">
-                    <img width="42" class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"/>
-                $else:
-                  $if indexing: <a class="transition" href="/torrentor/l/$query$movie[0]/">
-                  $else:  <a class="transition" href="/torrentor/l/$movie[0]/">
-                  <img width="42" class="img-portfolio img-responsive" src="/static/img/$(movie[1]+'.png')"/>
-                <br/>
-                <span style="word-wrap: break-word;font-size:12px;">$(movie[0][:72]+'...' if len(movie[0])>=75 else movie[0])</span>
-                </a>
-              </div>
-            </div>
+        <div class="row" id="files">
+            
+            <script>
+
+            $("a.transition").click(function(event){
+                event.preventDefault();
+                linkLocation = this.href;
+                $("body").fadeOut(400, function(){
+                  window.location = linkLocation;
+                });      
+            });
+                $(document).ready(function() {
+                  poll();
+                  var INX;
+
+                  $("#content").css("display", "none");
+
+                  $.post('/torrentor/json:list/','{"path":"<PATH>"}',function(data){
+                      INX=data.indexing;
+                      if(data.type=='dir'){
+                          $.each(data.files, function(index,object) {
+                              data = '<div class="col-md-2 col-sm-4 col-xs-6 text-center"> <div class="portfolio-item">';
+                                if(object[1] == 'mov') {
+                                  data+='<a data-toggle="modal" href="#outselect" onclick="passData(\'<PATH>\',\''+object[0]+'\', \''+object[0].slice(-3)+'\');">';
+                                  data+='<img width="42" class="img-portfolio img-responsive" src="/static/img/'+object[1]+'.png\"/>';
+                                }else{
+                                  if(data.indexing) data+='<a class="transition" href="/torrentor/l/<PATH>'+object[0]+'/">';
+                                  else data+='<a class="transition" href="/torrentor/l/'+object[0]+'/">'
+                                  data+='<img width="42" class="img-portfolio img-responsive" src="/static/img/'+object[1]+'.png"/>';
+                                }
+                              data+= "<br/>";
+                              data += '<span style="word-wrap: break-word;font-size:12px;">'+(object[0].length>=75 ? object[0].slice(72)+'...': object[0])+'</span>';
+                              
+                              data += "</a></div></div>";
+                              $('#files').append(data);
+                          });
+                          $("#content").fadeIn(300);
+                          $(".loader").fadeOut(300);
+                      }
+                    },'json');
+                });
+            </script>
+
         </div>
 
         <script type="text/javascript">
@@ -104,20 +136,19 @@ $def with (query,files,indexing)
               document.getElementById('deviceText').innerText = 'Cannot play on this device.'
 
             }else{
-              $if indexing: document.getElementById('devicePlay').href = '/torrentor/l'+path+target+'/';
-              $else: document.getElementById('devicePlay').href = '/torrentor/l/'+target+'/';
+              document.getElementById('devicePlay').href = '/torrentor/l'+path+target+'/';
               document.getElementById('deviceIcon').src = '/static/img/device.png';
               document.getElementById('deviceText').innerText = 'This device'
             }
             document.getElementById('hdmiPlay').onclick = function(){
-              $.post('/torrentor/json:playHDMI/','{"path":"$(query if indexing else "")'+target+'"}',function(data){
+              $.post('/torrentor/json:playHDMI/','{"path":"<PATH>/'+target+'"}',function(data){
                   console.log(data);
                   $('#outselect').hide()
                 },'json');
             }
             $('#substatus').html('Downloading subtitle');
             $('#loading').attr('src','/static/img/loading.gif').show();
-            $.post("/torrentor/json:subtitle/",'{"path":"$(query if indexing else "")'+target+'"}',
+            $.post("/torrentor/json:subtitle/",'{"path":"<PATH>/'+target+'"}',
               function(data) {
                 if(data.result==true){
                   $('#loading').css({"opacity":0}).attr('src','/static/img/check.png').animate({"opacity":1});
@@ -175,11 +206,6 @@ $def with (query,files,indexing)
       </div>
     </div>
 
-  <!-- Bootstrap core JavaScript -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="/static/js/jquery.js"></script>
-  <script src="/static/js/bootstrap.js"></script>
-
   <!-- Custom JavaScript for the Side Menu - Put in a custom JS file if you want to clean this up -->
   <script>
       var interval = null;
@@ -218,22 +244,9 @@ $def with (query,files,indexing)
             });
           },'json');
       }
-
-    $(document).ready(function() {
-      poll();
-      $("body").css("display", "none");
-      $("body").fadeIn(1000);
-    });
-
-    $("a.transition").click(function(event){
-        event.preventDefault();
-        linkLocation = this.href;
-        $("body").fadeOut(400, function(){
-          window.location = linkLocation;
-        });      
-    });
   </script>
 
+  </div>
   </body>
 
 </html>

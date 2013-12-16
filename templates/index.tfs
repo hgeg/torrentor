@@ -121,7 +121,6 @@
           e.preventDefault();
           poll();
           interval = window.setInterval('poll();',2000);
-          state = !state;
           $("#sidebar-wrapper").toggleClass("active");
       });
 
@@ -190,7 +189,7 @@
     state = ""
 
     function search(input){
-      if(input.length==0 || !($('#OmniField').is(":focus") || $('#OmniButton').is(":focus")) ) {
+      if(!($('#OmniField').is(":focus") || $('#OmniButton').is(":focus")) ) {
         $('#OmniField').popover('destroy');
         $('#OmniField').val('');
         $('#actionIcon').removeClass().addClass('icon-th-large')
@@ -202,8 +201,8 @@
       bufferTime=3
       $('#OmniButton').prop('disabled',true);
       $('#OmniField').popover('destroy');
-      $('#actionIcon').hide(50,function(){  
-          $('#loading').show(50);
+      $('#actionIcon').fadeOut(50,function(){  
+          $('#loading').fadeIn(50);
       });
       $.post("/torrentor/json:match/", '{"query":"'+input+'"}',
         function(data) {
@@ -212,18 +211,18 @@
         state = data.status
         if(data.status=='downloading') {
           $('#actionIcon').removeClass().addClass('icon-ok');
-          $('#loading').delay(2000).hide(100,function(){
-              $('#actionIcon').show(100).delay(2000).css('overflow','visible');
+          $('#loading').delay(2000).fadeOut(100,function(){
+              $('#actionIcon').fadeIn(100).delay(2000).css('overflow','visible');
               $('#OmniButton').removeAttr('disabled');
               $('#OmniField').removeAttr('disabled');
               $('#OmniField').prop('value','');
           });
         } else if(data.status=='found') {
             torent = "";
-            $('#actionIcon').hide(100,function(){  
-              $('#loading').delay(1000).hide(50,function(){  
+            $('#actionIcon').fadeOut(100,function(){  
+              $('#loading').delay(1000).fadeOut(50,function(){  
                 $('#actionIcon').removeClass().addClass('icon-search')
-                $('#actionIcon').show(100,function(){$$('#actionIcon').css('overflow','visible')});
+                $('#actionIcon').fadeIn(100,function(){$$('#actionIcon').css('overflow','visible')});
               });
             });
         } else if(data.status=='search') {
@@ -238,10 +237,10 @@
             }
             content += "</ul>"
             $('#OmniField').popover('destroy');
-            $('#actionIcon').hide(100,function(){  
-              $('#loading').delay(1000).hide(50,function(){  
+            $('#actionIcon').fadeOut(100,function(){  
+              $('#loading').delay(1000).fadeOut(50,function(){  
                 $('#actionIcon').removeClass().addClass('icon-arrow-down')
-                $('#actionIcon').show(100,function(){
+                $('#actionIcon').fadeIn(100,function(){
                     $('#actionIcon').css('overflow','visible')
                     $('#OmniField').popover({'placement':'bottom','title':'<b>Search Results:</b>','content': content
                        ,'html':true}).popover('show');
@@ -251,11 +250,11 @@
         } else {
           torent = "";
           $('#OmniField').popover('destroy');
-          $('#loading').hide(50,function(){  
+          $('#loading').fadeOut(50,function(){  
             $('#actionIcon').removeClass().addClass('icon-warning-sign')
             $('#OmniField').popover({'placement':'bottom','content': '<b class="danger">No results found!</b>'
                        ,'html':true}).popover('show');
-            $('#actionIcon').show(100).css('overflow','visible');
+            $('#actionIcon').fadeIn(100).css('overflow','visible');
             $('#OmniButton').prop('disabled',true);
           });
         }
