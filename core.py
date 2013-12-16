@@ -6,7 +6,7 @@ from subprocess import check_output as cout
 from subprocess import Popen as popen
 #from twatch import *
 import web,requests,json,redis,re,time,urllib
-import os,sys,socket,fcntl,struct,shelve
+import os,sys,socket,fcntl,struct,shelve,datetime
 import settings
 from scripts import action
 
@@ -159,15 +159,19 @@ class JSON:
       path = post['path']
       abs_path = "%s/%s"%(settings.MEDIA_DIR,path.strip("/"))
       if(os.path.isdir(abs_path)):
-        if(r.get(path)):
-            if path in '/' :
+        if path in '/': path = '/' 
+        if r.exists(path):
+            data = json.loads(r.get(path))
+            data.update(cached=True)
+            data = json.dumps(data)
+        else:
+            if path == '/' :
               files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt'], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
-              path = '/' 
             else:
               files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']
             data = '{"path":"%s","files":%s,"type":"dir","indexing":true}'%(path,json.dumps(files))
-            r.set(path,data,86400)
-        else: data = r.get(path)
+            r.set(path,data)
+            r.expire(path,86400)
         return data
       else:
         return '{"path":"%s", "type":"file","indexing":false}'%(path)
