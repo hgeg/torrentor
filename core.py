@@ -171,7 +171,7 @@ class JSON:
               files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']
             data = '{"path":"%s","files":%s,"type":"dir","indexing":true}'%(path,json.dumps(files))
             r.set(path,data)
-            r.expire(path,86400)
+            r.expire(path,30)
         return data
       else:
         return '{"path":"%s", "type":"file","indexing":false}'%(path)
