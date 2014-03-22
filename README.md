@@ -48,3 +48,5 @@ Torrentor.v2 is quite new and naturally has some bugs & issues. Here are some of
 * Needs subtitle support.
 
 For the bugs you fount other than those, send your reports and/or to [me](mailto:alicanblbl@gmail.com).
+
+Just triyng sth: rape rape rape rape rape rape rape rape rape
