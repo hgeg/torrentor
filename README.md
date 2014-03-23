@@ -8,10 +8,11 @@ Torrentor.v2
 1. Description 
 --------------
 
-Torrentor.v2 is the lightweight, easy to install, and optimized version of classic torrentor, featuring brand new minimalistic interface. This version's focus is handling media files. It is designed to play movies and tv shows downloaded via torrent.
+Torrentor.v2 is the lightweight, easy to install, and optimized version of classic torrentor, featuring brand new minimalistic interface. This version's focus is handling media files. I designed it to play movies and tv shows downloaded via torrent.
 
 2. Installation
 ---------------
+* First, connect your RasPi to internet, an external storage and your TV via hdmi cable.
 * Download Deployment script [from here](https://hgeg.io/misc/deploy) into the folder you want to install torrentor.
 
 * open it with your favorite text editor, then change ```DATA_DIR``` variable to a desired path for your downloads. Normally this would be the root directory of your storage space(e.g. external harddisk).
@@ -44,9 +45,5 @@ Torrentor.v2 is quite new and naturally has some bugs & issues. Here are some of
 * There are several design issues on progress panel.
 * Browser playback does not work on mobile devices.
 * No support for displaying files other than video. (e.g. audio, text and images)
-* File conversion is not added yet. 
-* Needs subtitle support.
 
-For the bugs you fount other than those, send your reports and/or to [me](mailto:alicanblbl@gmail.com).
-
-Just triyng sth: rape rape rape rape rape rape rape rape rape
+For the bugs you found other than these, send your reports to [me](mailto:alicanblbl@gmail.com).
