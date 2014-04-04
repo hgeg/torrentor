@@ -19,7 +19,7 @@
 
   </head>
 
-  <body>
+  <body style="display:none">
 
     <!-- Side Menu -->
     <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle"><i class="icon-reorder"></i></a>
@@ -151,10 +151,9 @@
   <script type="text/javascript">
     $(document).ready(function() {
       poll();
-      $("body").css("display", "none");
-      $("body").fadeIn(1000);
       $("#OmniField").focus()
       setInterval("search(input);keys=false;",400);
+      $("body").fadeIn(1000);
     });
 
     function submitForm(form) {

@@ -1,4 +1,4 @@
-$def with (movie,source)
+$def with (movie,source,subtitle)
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,137 +9,38 @@ $def with (movie,source)
 
     <title>Torrentor.v2</title>
 
-    <script src="http://api.html5media.info/1.1.6/html5media.min.js"></script>
 
-    <!-- Bootstrap core CSS -->
     <link href="/static/css/bootstrap.css" rel="stylesheet">
-
-    <!-- Add custom CSS here -->
     <link href="/static/css/stylish-portfolio.css" rel="stylesheet">
     <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
     <link rel="icon" type="image/ico" href="/static/img/favicon.ico">
-
+    
   </head>
 
-  <body>
+   <body>
     <div style="background-color:#000;top:0px;left:0px;width:100%;height:100%;z-index:-100;"></div>
+    
+    <span class="non-media-ui-element" style="text-shadow:2px 2px #000;font-weight:normal;position:absolute;top:15px;left:0px;z-index:10;width:100%;text-align:center;color:white;">$movie</span>
 
-    <video id="player" controls preload="auto" width="100%">
-     <source src="/static/media/$source" type='video/webm'>
-      <img src="/static/img/notfound.png" title="Video not found!">
+    <video id="player" controls width="100%">
+      <source src="/static/media/$source" type="video/mp4" />
+      <track  src="/static/media/$subtitle" kind="subtitles" srclang="en-US" label="English" />
     </video>
 
     <a class="btn btn-info btn-md transition non-media-ui-element" href="#" style="position:fixed;top:5px;left:5px;"><span class="icon-arrow-left"></span></a> 
-
-    <!-- Side Menu -->
-    <a id="menu-toggle" href="#" class="btn btn-info btn-md toggle"><i class="icon-reorder"></i></a>
-    <div id="sidebar-wrapper" style="overflow:hidden">
-      <ul class="sidebar-nav">
-        <a id="menu-close" href="#" class="btn btn-default btn-md pull-right toggle"><i class="icon-remove"></i></a>
-        <li class="sidebar-brand white">
-          Control Panel
-        </li>
-        <li id="nowplaying" class="white">
-          <h5>Now Playing:</h5>
-          <div class="row">
-            <div class="col-md-12"><span id="moviename" style="font-size:10px;font-weight:normal;"></span></div>
-          </div>
-          <div class="row text-center">
-            <button class="btn" style="background-color:#fff" onclick="control('back')"><span class="icon-fast-backward"></span></button>
-            <button class="btn" style="background-color:#fff" onclick="control('play')"><span class="icon-play"></span></button>
-            <button class="btn" style="background-color:#fff" onclick="control('stop')"><span class="icon-stop"></span></button>
-            <button class="btn" style="background-color:#fff" onclick="control('next')"><span class="icon-fast-forward"></span></button>
-          </div>
-          <script type="text/javascript">
-            function control(directive) {
-              $$.post('/torrentor/json:control/','{"directive":"'+directive+'"}',null,"json")
-            }
-          </script>
-        </li>
-        <br>
-        <li class="white">
-          <h5>Current Downloads:</h5>
-        </li>
-        <li class="white" id="downloads">
-        
-        </li>
-          <!--
-          <div class="progress">
-            <div class="progress-bar progress-bar-sm" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-              <span class="sr-only">60% Complete</span>
-            </div>
-          </div>
-          -->
-      </ul>
-    </div>
-    <!-- /Side Menu -->
-      <br>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4 col-md-offset-4 text-center">
-            <span class="non-media-ui-element" style="color:white;">$movie</span>
-          </div>
-        </div>
-      </div>
-
-    <section>
-      <div class="container">
-      </section>
-    </div>
 
   <!-- Bootstrap core JavaScript -->
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="/static/js/jquery.js"></script>
   <script src="/static/js/bootstrap.js"></script>
+  <script src="/static/js/jquery.videosub.js"></script>
+  <script>
+      $$('#player').videoSub();
+  </script>
 
   <!-- Custom JavaScript for the Side Menu - Put in a custom JS file if you want to clean this up -->
-  <script>
-      $$("#menu-close").click(function(e) {
-          e.preventDefault();
-          $$("#sidebar-wrapper").toggleClass("active");
-      });
-  </script>
-  <script>
-      var state = false;
-      var interval = null;
-      $$("#menu-toggle").click(function(e) {
-          e.preventDefault();
-          poll();
-          if(!state) {
-            interval = window.setInterval('poll();',2000);
-          } else {
-            window.clearInterval(interval);
-          }
-          state = !state;
-          $$("#sidebar-wrapper").toggleClass("active");
-      });
-
-      function poll() {
-          $$.get("/torrentor/json:status/", function(data) {
-            $$('#downloads').empty()
-            if(data.now_playing == '') {
-                $$('#nowplaying').hide()
-            } else {
-                document.getElementById('moviename').innerText = data.now_playing
-                $$('#nowplaying').show()
-            }
-            $$.each(data.list, function(index,object) {
-                name = object[0].length<30 ? object[0] : object[0].substring(0,27)+'...'
-              drate = object[1]/1024.0;
-              percent = object[2]*1.0/object[3]*100;
-              $$('#downloads').append(
-              '<p class="smaller" style="line-height:1.5em;margin:0px 2px 2px 5px;">'+name+'</p><p class="smaller" style="line-height:1.5em;margin:0px 2px 15px 5px;">'+Math.round(drate*100)/100+' KB/s, ' +
-              Math.round(percent*100)/100+ '% downloaded.</p>'
-              );
-            });
-          },'json');
-      }
-  </script>
-
   <script type="text/javascript">
     $$(document).ready(function() {
-      poll();
       $$("body").css("display", "none");
       $$("body").fadeIn(500);
     });

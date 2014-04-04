@@ -5,8 +5,8 @@ from subprocess import call as runCommand
 from subprocess import check_output as cout
 from subprocess import Popen as popen
 #from twatch import *
-import web,requests,json,redis,re,time,urllib
-import os,sys,socket,fcntl,struct,shelve,datetime
+import web,requests,json,redis,re,time,urllib,threading
+import os,sys,socket,fcntl,struct,shelve,datetime,hashlib
 import settings
 from scripts import action
 
@@ -68,6 +68,10 @@ class Main:
     #return render.index()
   def POST(self):
     return render.index()
+
+class Media:
+  def GET(self,path):
+      return render.media(path.split('/')[-1],path,path[:-3]+'srt')
 
 class Query:
   def GET(self):
@@ -132,8 +136,13 @@ class JSON:
               data.update(status="search")
               return json.dumps(data)
             except: return '{"status":"error"}'
+    if call == 'convert':
+       convThread = threading.Thread(target=action.convert,args=(settings.MEDIA_DIR+'/'+post['path'],))
+       convThread.start()
+       convThread.join()
+       return('{"error":false,"status":"added to conversion queue"}')
     if call == 'playHDMI':
-      runCommand('echo "on 0" | cec-client -s',shell=True)
+      #runCommand('echo "on 0" | cec-client -s',shell=True)
       runCommand(["screen", "-S", "omx", "-X", "quit"])
       popen(["screen", "-dmS", "omx", "omxplayer", "-o", "hdmi", "%s/%s"%(settings.MEDIA_DIR,post['path'])])
       action.play(post['path'].split('/')[-1])
@@ -147,7 +156,7 @@ class JSON:
         result = "true"
         f.close()
       except IOError:
-        runCommand(['periscope','%s/%s'%(settings.MEDIA_DIR,post['path']),'-l','en','--quiet'])
+        action.get_subtitle("%s/%s"%(settings.MEDIA_DIR,post['path'])) 
         try:
           f = open(("%s/%s"%(settings.MEDIA_DIR,post['path']))[:-3]+'srt')
           result = "true"
@@ -166,17 +175,16 @@ class JSON:
             data = json.dumps(data)
         else:
             if path == '/' :
-              files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt'], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
+              files = sorted([(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:] not in ('srt','cnva')], key=lambda e:os.path.getctime(abs_path+'/'+e[0]), reverse=True)
             else:
-              files = [(e, checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:]!='srt']
+              files = [(e.replace("'","&#39;"), checktype("%s/%s"%(abs_path,e))) for e in os.listdir(abs_path) if e[-3:] not in ('cnva','srt')]
             data = '{"path":"%s","files":%s,"type":"dir","indexing":true}'%(path,json.dumps(files))
             r.set(path,data)
-            r.expire(path,30)
+            r.expire(path,3000)
         return data
       else:
         return '{"path":"%s", "type":"file","indexing":false}'%(path)
-
-    return '{"error":true,"type":"InvalidCallError"}'
+    return '{"error":true,"type":"InvalidCallError","call":"%s"}'%call
 
 
 if __name__ == '__main__':

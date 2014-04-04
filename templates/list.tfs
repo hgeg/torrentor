@@ -22,7 +22,6 @@
       <script src="/static/js/jquery.js"></script>
       <script src="/static/js/bootstrap.js"></script>
 
-
   </head>
 
   <body>
@@ -76,7 +75,7 @@
     <div class="portfolio">
       <div class="container">
         <div class="row">
-          <div class="col-md-4 col-md-offset-4 text-center">
+          <div class="col-md-12 col-md-offset-12 text-center">
               <h4>Index of "<PATH>"</h4>
             <hr>
           </div>
@@ -105,15 +104,15 @@
                           $.each(data.files, function(index,object) {
                               data = '<div class="col-md-2 col-sm-4 col-xs-6 text-center"> <div class="portfolio-item">';
                                 if(object[1] == 'mov') {
-                                  data+='<a data-toggle="modal" href="#outselect" onclick="passData(\'<PATH>\',\''+object[0]+'\', \''+object[0].slice(-3)+'\');">';
+                                  data+='<a data-toggle="modal" href="#outselect" onclick="passData(\'<PATH>\',\''+object[0].replace("&#39;","\\\'")+'\', \''+object[0].slice(-3)+'\');">';
                                   data+='<img width="42" class="img-portfolio img-responsive" src="/static/img/'+object[1]+'.png\"/>';
                                 }else{
                                   if(data.indexing) data+='<a class="transition" href="/torrentor/l/<PATH>'+object[0]+'/">';
-                                  else data+='<a class="transition" href="/torrentor/l/'+object[0]+'/">'
+                                  else data+='<a class="transition" href="/torrentor/l/<PATH>/'+object[0]+'/">'
                                   data+='<img width="42" class="img-portfolio img-responsive" src="/static/img/'+object[1]+'.png"/>';
                                 }
                               data+= "<br/>";
-                              data += '<span style="word-wrap: break-word;font-size:12px;">'+(object[0].length>=75 ? object[0].slice(72)+'...': object[0])+'</span>';
+                              data += '<span style="word-wrap: break-word;font-size:12px;">'+(object[0].length>=75 ? object[0].substring(0,72)+'...': object[0])+'</span>';
                               
                               data += "</a></div></div>";
                               $('#files').append(data);
@@ -128,22 +127,34 @@
         </div>
 
         <script type="text/javascript">
+          String.prototype.addSlashes = function() { 
+            return this.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+          } 
           function passData(path, target, type) {
-            console.log(type);
             if(type!='mp4'){
+              document.getElementById('deviceIcon').src = '/static/img/convert.png';
+              document.getElementById('deviceText').innerText = 'Convert to playable format.';
               document.getElementById('devicePlay').href = null;
-              document.getElementById('deviceIcon').src = '/static/img/device_no.png';              
-              document.getElementById('deviceText').innerText = 'Cannot play on this device.'
-
+              document.getElementById('devicePlay').onclick = function(){
+                $.post('/torrentor/json:convert/','{"path":"<PATH>'+target+'"}',function(data){
+                    console.log(data);
+                    $('#outselect').modal('hide')
+                  },'json');
+              }
+              /*
+              document.getElementById('devicePlay').href = null;
+              document.getElementById('deviceIcon').src = '/static/img/device_no.png';
+              document.getElementById('deviceText').innerText = 'Cannot play on this device.';
+              */
             }else{
-              document.getElementById('devicePlay').href = '/torrentor/l'+path+target+'/';
+              document.getElementById('devicePlay').href = '/torrentor/media:'+path+target+'/';
               document.getElementById('deviceIcon').src = '/static/img/device.png';
-              document.getElementById('deviceText').innerText = 'This device'
+              document.getElementById('deviceText').innerText = 'This device';
             }
             document.getElementById('hdmiPlay').onclick = function(){
               $.post('/torrentor/json:playHDMI/','{"path":"<PATH>/'+target+'"}',function(data){
                   console.log(data);
-                  $('#outselect').hide()
+                  $('#outselect').modal('hide')
                 },'json');
             }
             $('#substatus').html('Downloading subtitle');
