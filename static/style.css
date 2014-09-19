@@ -1,0 +1,139 @@
+html {
+  font: 112.5%/1.444444444 "Runda", "Helvetia Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #eee;
+  background-color: #c0392b;  
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  user-select: none;
+}
+
+span.header {
+  font-size: 22px;
+  margin: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis; 
+}
+
+.main-input {
+  display:inline-block;
+  font: 16px "Runda", "Helvetia Neue", Helvetica, Arial, sans-serif;
+  background-color: #a0190b;  
+  box-sizing: border-box;
+  border: none;
+  border-radius: 5px;
+  width:100%;
+  padding: 10px;
+  outline: none;
+  color: #fff;
+
+  -webkit-appearance: none;
+}
+
+::-webkit-input-placeholder {color: #fff;}
+:-moz-placeholder {color: #fff;}
+::-moz-placeholder {color: #fff;}
+:-ms-input-placeholder {color: #fff;}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  vertical-align: text-bottom;
+}
+
+#items {
+  margin: 32px;
+  margin-bottom: 112px;
+}
+
+.gray {
+  margin-top: 24px;
+  line-height: 24px;
+  font-size: 10px;
+  text-align: center;
+  word-break: break-all;
+  border-radius: 5px;
+}
+
+.gray:hover {
+  background-color: rgba(255,255,255,0.3);
+}
+
+.footer {
+  padding: 8px;
+  position: fixed;
+  left: 0px; bottom: 0px;
+  width: 2500px; height: 64px;
+  background-color: #2c3e50;
+}
+
+.footer > .playing {
+  float: left;
+  width: 128px;
+  height: 32px;
+  font-size: 17px;
+  margin-top: -36px;
+  background-color: #2c3e50;
+  padding-top: 4px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.footer > .queue-item {
+  display: inline-block;
+  margin-right: 4px;
+  height: 100%;
+  width: 120px;
+  border-radius: 5px;
+  background-color: #34495e;
+  cursor: pointer;
+}
+
+.footer > .queue-item:hover {
+  background-color: #44596e;
+}
+
+.footer > .queue-item:first-of-type{
+  height: 100%;
+  width: 128px;
+  background-color: #44596e;
+  font-weight: bold;
+  cursor: default;
+}
+
+.queue-item > p {
+  margin: 8px;
+  font-size:12px;
+  line-height: 14px;
+}
+
+@media screen and (max-width: 700px){
+
+.columns {
+  width: 32px;
+  height: 32px;
+}
+
+#items {
+  margin: 0px;
+}
+
+.gray {
+  margin-top: 16px;
+  text-align: left;
+}
+
+.icon {
+  vertical-align: middle;
+  line-height: 50px;
+}
+
+.size {
+  display: inline;
+}
+
+}

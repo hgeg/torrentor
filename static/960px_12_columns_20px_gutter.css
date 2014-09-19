@@ -1,0 +1,99 @@
+   /* Container */ 
+   .container-12 { width: 960px; margin: -10px; } 
+
+   /* Global */ 
+   [class*="grid-"] { float: left; display: inline; margin-left: 10px; margin-right: 10px; } 
+   .group:before, .group:after { content: ""; display: table; line-height: 0; } 
+   .group:after { clear: both; } 
+
+   /* Nested elements */ 
+   .alpha { margin-left: 0px; } 
+   .omega { margin-right: 0px; } 
+
+   /* Grids */ 
+   .container-12 .grid-2 {  width: 140px; min-height: 140px; }
+   .container-12 .grid-4 {  width: 300px; }
+
+   /* Offset Extra Space */ 
+   .container-12 .offset-1 { padding-left: 80px; }
+   .container-12 .offset-2 { padding-left: 160px; }
+   .container-12 .offset-3 { padding-left: 240px; }
+   .container-12 .offset-4 { padding-left: 320px; }
+   .container-12 .offset-5 { padding-left: 400px; }
+   .container-12 .offset-6 { padding-left: 480px; }
+   .container-12 .offset-7 { padding-left: 560px; }
+   .container-12 .offset-8 { padding-left: 640px; }
+   .container-12 .offset-9 { padding-left: 720px; }
+   .container-12 .offset-10 { padding-left: 800px; }
+   .container-12 .offset-11 { padding-left: 880px; }
+
+/* ==========================================================================
+   768px - 12 columns - 20px gutter 
+   ========================================================================== */
+
+   @media (min-width: 768px) and (max-width: 959px) { 
+
+   /* Container */ 
+   .container-12 { width: 768px; margin: 0 auto; } 
+
+   /* Global */ 
+   [class*="grid-"] { float: left; display: inline; margin-left: 10px; margin-right: 10px; } 
+   .group:before, .group:after { content: ""; display: table; line-height: 0; } 
+   .group:after { clear: both; } 
+
+   /* Nested elements */ 
+   .alpha { margin-left: 0px; } 
+   .omega { margin-right: 0px; } 
+
+   /* Grids */ 
+   .container-12 .grid-2 {  width: 108px; }
+   .container-12 .grid-4 {  width: 236px; }
+
+   /* Offset Extra Space */ 
+   .container-12 .offset-1 { padding-left: 64px; }
+   .container-12 .offset-2 { padding-left: 128px; }
+   .container-12 .offset-3 { padding-left: 192px; }
+   .container-12 .offset-4 { padding-left: 256px; }
+   .container-12 .offset-5 { padding-left: 320px; }
+   .container-12 .offset-6 { padding-left: 384px; }
+   .container-12 .offset-7 { padding-left: 448px; }
+   .container-12 .offset-8 { padding-left: 512px; }
+   .container-12 .offset-9 { padding-left: 576px; }
+   .container-12 .offset-10 { padding-left: 640px; }
+   .container-12 .offset-11 { padding-left: 704px; }
+
+   }
+
+   @media only screen and (max-width: 767px) {
+
+   body { padding-left: 20px; padding-right: 20px; }
+
+   /* Container */
+   .container-12 { width: auto; }
+
+   /* Global */
+   [class*="grid-"] { display: block; margin-left: 0px; margin-right: 0px; }
+
+   /* Nested Elements */
+   .alpha { margin-left: 0px; }
+   .omega { margin-right: 0px; }
+
+   /* Grids */
+   .container-12 .grid-2,
+   .container-12 .grid-4, { width: 100%; }
+
+   /* Offset Extra Space */
+   .container-12 .offset-1, 
+   .container-12 .offset-2, 
+   .container-12 .offset-3, 
+   .container-12 .offset-4, 
+   .container-12 .offset-5, 
+   .container-12 .offset-6, 
+   .container-12 .offset-7, 
+   .container-12 .offset-8, 
+   .container-12 .offset-9, 
+   .container-12 .offset-10, 
+   .container-12 .offset-11 { padding-left: 0; }
+
+ }
+

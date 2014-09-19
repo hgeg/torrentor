@@ -3,6 +3,7 @@
 *.pyc
 *.swp
 *.un~
+*.rdb
 local_settings.py
 local_rtorrent.rc
 torrents
