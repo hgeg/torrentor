@@ -1,0 +1,9 @@
+{
+  "basePath":"/",
+  "downloadOpts": {
+    "sequential": false,
+    "seedRatio": 0.5,
+    "freeHours":[0,6]
+  }
+}
+
