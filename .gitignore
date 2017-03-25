@@ -3,10 +3,4 @@
 *.pyc
 *.swp
 *.un~
-local_settings.py
-local_rtorrent.rc
-torrents
-downloads
-session
-finished
-static/media/*
+.venv
