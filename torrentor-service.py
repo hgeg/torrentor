@@ -8,7 +8,7 @@ from tools import *
 import core as torrentor
 import time, json, sys, os, random, db, hashlib
 
-app = Flask("torrentor")
+app = Flask("torrentor",static_folder="static")
 #debug settings
 #remove on production
 app.debug = True
@@ -57,6 +57,8 @@ def list():
                 fd.type = 'dir'
             elif is_mov(f.name):
                 fd.type = 'mov'
+            else:
+                fd.type = 'reg'
             response.files += [fd.dump()]
         return False, response.dump()
 
@@ -79,19 +81,29 @@ def download():
 def run():
     try:
         form = Dot(request.form)
-        path = form.path
+        key = form.key
+        path = form.current_path
         action  = form.action
+        print form.dump()
     except Exception as e:
         return True, "InvalidForm"
     try:
-        target_path = Path(config.basePath) / path
+        target_path = Path(config.basePath) / path / key
+        new_path = Path(path) / key
         response = Dot()
         if action == 'cd':
             assert(target_path.is_dir())
-            response.current_path = path
+            response.current_path = str(new_path)
         if action == 'play':
             assert(is_mov(target_path.name))
             torrentor.play(path)
         return False, response.dump()
     except Exception as e:
         return True, "InvalidAction"
+
+if __name__ == "__main__":
+    #cache the players database
+    if "--debug" in sys.argv:
+        app.run('0.0.0.0',11389,debug=True)
+    else:
+        WSGIServer(app).run()

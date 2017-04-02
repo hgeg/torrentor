@@ -1,0 +1,67 @@
+/* Mobile First. Mobile styles are the default and larger styles come up from media queries*/
+/* Content Structure*/
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Section */
+.module:last-child {
+  margin-bottom: 0;
+}
+.module h2 {
+  margin-bottom: 48px;
+  font-family: "Roboto Slab", serif;
+}
+@media only screen and (min-width: 600px) {
+  .module h2 {
+    font-size: 42px;
+  }
+}
+.module p {
+  margin-bottom: 40px;
+  font-size: 1em;
+  font-weight: 300;
+}
+.module p:last-child {
+  margin-bottom: 0;
+}
+@media only screen and (min-width: 600px) {
+  .module p {
+    font-size: 20px;
+  }
+}
+.module.content {
+  padding: 40px 0;
+}
+.module.parallax {
+  height: 120px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+.module.parallax h1 {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 3em;
+  line-height: 600px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+@media only screen and (min-width: 600px) {
+  .module.parallax h1 {
+    font-size: 96px;
+  }
+}
+@media only screen and (min-width: 960px) {
+  .module.parallax h1 {
+    font-size: 160px;
+  }
+}
+.module.parallax-1 {
+  background-image: url(/static/parallax.jpg);
+}
+
